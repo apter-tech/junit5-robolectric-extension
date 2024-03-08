@@ -26,14 +26,14 @@ internal class JUnit5RobolectricTestRunner(clazz: Class<*>) :
         frameworkMethod: FrameworkMethod,
         bootstrappedMethod: Method,
     ) {
-        logger.info {
+        logger.trace {
             "runBeforeTest ${bootstrappedMethod.declaringClass.simpleName}::${bootstrappedMethod.name}"
         }
         super.beforeTest(sdkEnvironment, frameworkMethod, bootstrappedMethod)
     }
 
     fun runAfterTest(frameworkMethod: FrameworkMethod, bootstrappedMethod: Method) {
-        logger.info {
+        logger.trace {
             "runAfterTest${bootstrappedMethod.declaringClass.simpleName}::${bootstrappedMethod.name}"
         }
         try {
