@@ -10,7 +10,7 @@ dependencies {
     implementation libs.junit4
     implementation platform(libs.junit5Bom)
     implementation libs.bundles.junit5
-    testImplementation libs.kotlinTest
+    testImplementation libs.kotlinTestJUnit5
     implementation(libs.guava) {
         because "CVE-2023-2976 7.1 " +
                 "Transitive Files or Directories Accessible to External Parties vulnerability with High severity found"

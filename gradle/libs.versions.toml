@@ -14,7 +14,7 @@ junit5Bom = { module = "org.junit:junit-bom", version.ref = "junit5" }
 junit5JupiterApi = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "sources" }
 junit5JupiterEngine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "sources" }
 junit5PlatformLauncher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "sources" }
-kotlinTest = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+kotlinTestJUnit5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5", version.ref = "kotlin" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 
 [plugins]
@@ -23,5 +23,5 @@ kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 [bundles]
 junit5 = [
     "junit5JupiterApi",
-    "junit5PlatformLauncher"
+    "junit5PlatformLauncher",
 ]
