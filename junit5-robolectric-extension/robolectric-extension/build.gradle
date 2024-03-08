@@ -1,0 +1,18 @@
+plugins {
+    alias(libs.plugins.kotlinJvm)
+}
+
+group = 'tech.apter.junit5.jupiter'
+version = '1.0-SNAPSHOT'
+
+dependencies {
+    testImplementation libs.kotlinTest
+}
+
+test {
+    useJUnitPlatform()
+}
+
+kotlin {
+    jvmToolchain(libs.versions.jvmToolchain.get().toInteger())
+}

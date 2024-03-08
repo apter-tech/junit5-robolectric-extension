@@ -1,0 +1,9 @@
+[versions]
+jvmToolchain = "17"
+kotlin = "1.9.22"
+
+[libraries]
+kotlinTest = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+
+[plugins]
+kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
