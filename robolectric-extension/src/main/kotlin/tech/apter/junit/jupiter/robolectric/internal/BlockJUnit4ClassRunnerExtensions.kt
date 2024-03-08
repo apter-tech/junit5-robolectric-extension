@@ -13,11 +13,13 @@ import org.junit.runners.BlockJUnit4ClassRunner
 import org.junit.runners.model.FrameworkMethod
 import java.util.Collections
 
-@Suppress("UNCHECKED_CAST")
-internal val parameterizedTestAnnotation = try {
-    Class.forName("org.junit.jupiter.params.ParameterizedTest") as? Class<out Annotation>
-} catch (e: ClassNotFoundException) {
-    null
+private val parameterizedTestAnnotation: Class<out Annotation>? by lazy {
+    try {
+        @Suppress("UNCHECKED_CAST")
+        Class.forName("org.junit.jupiter.params.ParameterizedTest") as? Class<out Annotation>
+    } catch (@Suppress("SwallowedException") e: ClassNotFoundException) {
+        null
+    }
 }
 
 internal fun BlockJUnit4ClassRunner.computeJUnit5TestMethods(): MutableList<FrameworkMethod> {
@@ -53,9 +55,7 @@ internal fun BlockJUnit4ClassRunner.validatePublicVoidNoArgJUnit5Methods(
 ) {
     if (annotation == org.junit.Test::class.java) {
         validatePublicVoidNoArgMethods(Test::class.java, isStatic, errors)
-        if (parameterizedTestAnnotation != null) {
-            validatePublicVoidArgMethods(parameterizedTestAnnotation, isStatic, errors)
-        }
+        parameterizedTestAnnotation?.let { validatePublicVoidArgMethods(it, isStatic, errors) }
     } else {
         val jUnit5Annotation = when (annotation) {
             Before::class.java -> BeforeEach::class.java
