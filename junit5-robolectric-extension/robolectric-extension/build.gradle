@@ -6,7 +6,15 @@ group = 'tech.apter.junit5.jupiter'
 version = '1.0-SNAPSHOT'
 
 dependencies {
+    implementation libs.robolectric
+    implementation libs.junit4
+    implementation platform(libs.junit5Bom)
+    implementation libs.bundles.junit5
     testImplementation libs.kotlinTest
+    implementation(libs.guava) {
+        because "CVE-2023-2976 7.1 " +
+                "Transitive Files or Directories Accessible to External Parties vulnerability with High severity found"
+    }
 }
 
 test {

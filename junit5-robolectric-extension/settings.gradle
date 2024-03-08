@@ -12,8 +12,10 @@ plugins {
 dependencyResolutionManagement {
     repositories {
         mavenCentral()
+        google()
     }
 }
 
 rootProject.name = 'junit5-robolectric-extension'
+include("robolectric-extension")
 

@@ -1,9 +1,27 @@
 [versions]
+junit4 = "4.13.2"
+junit5 = "5.10.2"
 jvmToolchain = "17"
 kotlin = "1.9.22"
+robolectric = "4.11.1"
+# Use when bom also added to the dependencies
+sources = "sources"
 
 [libraries]
+guava = { module = "com.google.guava:guava", version = { require = "[32.0.1-jre,]" } }
+junit4 = { module = "junit:junit", version.ref = "junit4" }
+junit5Bom = { module = "org.junit:junit-bom", version.ref = "junit5" }
+junit5JupiterApi = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "sources" }
+junit5JupiterEngine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "sources" }
+junit5PlatformLauncher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "sources" }
 kotlinTest = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 
 [plugins]
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+
+[bundles]
+junit5 = [
+    "junit5JupiterApi",
+    "junit5PlatformLauncher"
+]
