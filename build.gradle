@@ -1,0 +1,4 @@
+allprojects {
+    group = 'tech.apter.junit5.jupiter'
+    version = '1.0-SNAPSHOT'
+}
