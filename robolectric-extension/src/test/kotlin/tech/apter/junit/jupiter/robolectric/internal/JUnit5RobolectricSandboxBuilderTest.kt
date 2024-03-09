@@ -78,9 +78,7 @@ class JUnit5RobolectricSandboxBuilderTest {
         ApkLoader(),
         AndroidSandbox.TestEnvironmentSpec(),
         ShadowProviders(emptyList()),
-    ).apply {
-        action()
-    }
+    ).apply(action)
 
     companion object {
         private fun createInstrumentationConfiguration() =

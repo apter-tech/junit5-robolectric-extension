@@ -1,4 +1,8 @@
 [versions]
+androidBuildTools = "8.3.0"
+androidCompileSdk = "34"
+androidJUnit5 = "1.10.0.0"
+androidxTestExtJunit = "1.1.5"
 junit4 = "4.13.2"
 junit5 = "5.10.2"
 jvmToolchain = "17"
@@ -8,17 +12,21 @@ robolectric = "4.11.1"
 sources = "sources"
 
 [libraries]
+androidxTestExtJunit = { module = "androidx.test.ext:junit", version.ref = "androidxTestExtJunit" }
 guava = { module = "com.google.guava:guava", version = { require = "[32.0.1-jre,]" } }
 junit4 = { module = "junit:junit", version.ref = "junit4" }
 junit5Bom = { module = "org.junit:junit-bom", version.ref = "junit5" }
 junit5JupiterApi = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "sources" }
 junit5JupiterEngine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "sources" }
+junit5JupiterParams = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "sources" }
 junit5PlatformLauncher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "sources" }
 kotlinTestJUnit5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5", version.ref = "kotlin" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 
 [plugins]
-kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+androidJUnit5 = { id = "de.mannodermaus.android-junit5", version.ref = "androidJUnit5" }
+androidLibrary = { id = "com.android.library", version.ref = "androidBuildTools" }
+kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 
 [bundles]
 junit5 = [
