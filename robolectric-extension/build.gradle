@@ -23,15 +23,17 @@ dependencies {
     implementation libs.junit4
     implementation platform(libs.junit5Bom)
     implementation libs.bundles.junit5
+    implementation(libs.guavaConstraint) {
+        because 'CVE-2023-2976 7.1 Transitive Files or Directories Accessible to External Parties vulnerability ' +
+                'with High severity found'
+    }
+    testImplementation libs.robolectricAndroidAll
     testImplementation libs.junit4
     testImplementation libs.androidxTestExtJunit
     testImplementation libs.kotlinTestJUnit5
     testImplementation libs.junit5JupiterParams
     testRuntimeOnly libs.junit5JupiterEngine
-    implementation(libs.guava) {
-        because "CVE-2023-2976 7.1 " +
-                "Transitive Files or Directories Accessible to External Parties vulnerability with High severity found"
-    }
+    testRuntimeOnly libs.junit5VintageEngine
 }
 
 kotlin {

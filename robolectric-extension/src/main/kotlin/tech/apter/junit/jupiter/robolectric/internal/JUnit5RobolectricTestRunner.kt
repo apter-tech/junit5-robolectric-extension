@@ -1,14 +1,15 @@
 package tech.apter.junit.jupiter.robolectric.internal
 
+import java.lang.reflect.Method
 import org.junit.runners.model.FrameworkMethod
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.internal.SandboxManager.SandboxBuilder
 import org.robolectric.internal.SandboxTestRunner
 import org.robolectric.internal.bytecode.InstrumentationConfiguration
 import org.robolectric.internal.bytecode.Sandbox
-import java.lang.reflect.Method
+import org.robolectric.util.inject.Injector
 
-internal class JUnit5RobolectricTestRunner(clazz: Class<*>) :
+internal class JUnit5RobolectricTestRunner(clazz: Class<*>, injector: Injector = defaultInjectorBuilder().build()) :
     RobolectricTestRunner(clazz, injector) {
     private val logger get() = createLogger()
     fun frameworkMethod(method: Method): FrameworkMethod = children.first { it.name == method.name }
@@ -45,7 +46,8 @@ internal class JUnit5RobolectricTestRunner(clazz: Class<*>) :
 
     override fun createClassLoaderConfig(method: FrameworkMethod): InstrumentationConfiguration {
         return InstrumentationConfiguration.Builder(super.createClassLoaderConfig(method))
-            .doNotAcquirePackage("tech.apter.junit.jupiter.robolectric").build()
+            .doNotAcquireClass(JUnit5RobolectricSandboxBuilder::class.java)
+            .build()
     }
 
     override fun computeTestMethods() = computeJUnit5TestMethods()
@@ -75,8 +77,7 @@ internal class JUnit5RobolectricTestRunner(clazz: Class<*>) :
     }
 
     private companion object {
-        private val injector = defaultInjector()
+        private fun defaultInjectorBuilder() = defaultInjector()
             .bind(SandboxBuilder::class.java, JUnit5RobolectricSandboxBuilder::class.java)
-            .build()
     }
 }
