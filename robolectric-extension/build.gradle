@@ -33,7 +33,6 @@ dependencies {
     testImplementation libs.kotlinTestJUnit5
     testImplementation libs.junit5JupiterParams
     testRuntimeOnly libs.junit5JupiterEngine
-    testRuntimeOnly libs.junit5VintageEngine
 }
 
 kotlin {
