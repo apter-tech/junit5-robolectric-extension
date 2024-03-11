@@ -1,5 +1,7 @@
 package tech.apter.junit.jupiter.robolectric.internal
 
+import java.util.Collections
+import javax.inject.Inject
 import org.robolectric.ApkLoader
 import org.robolectric.annotation.SQLiteMode
 import org.robolectric.internal.AndroidSandbox
@@ -10,14 +12,13 @@ import org.robolectric.internal.bytecode.ClassInstrumentor
 import org.robolectric.internal.bytecode.InstrumentationConfiguration
 import org.robolectric.internal.bytecode.ShadowProviders
 import org.robolectric.pluginapi.Sdk
-import java.util.*
-import javax.inject.Inject
 
 internal class JUnit5RobolectricSandboxBuilder @Inject constructor(
     private val apkLoader: ApkLoader,
     @Suppress("VisibleForTests")
     private val testEnvironmentSpec: AndroidSandbox.TestEnvironmentSpec,
     private val shadowProviders: ShadowProviders,
+    private val classInstrumentor: ClassInstrumentor,
 ) : SandboxManager.SandboxBuilder {
     private val logger get() = createLogger()
 
@@ -45,14 +46,18 @@ internal class JUnit5RobolectricSandboxBuilder @Inject constructor(
         instrumentationConfig: InstrumentationConfiguration,
         runtimeSdk: Sdk,
     ): SdkSandboxClassLoader {
-        val key = Key(instrumentationConfig, runtimeSdk)
+        val key = Key(instrumentationConfig, runtimeSdk, classInstrumentor)
         return classLoaderCache.getOrPut(key) {
-            logger.debug { "${SdkSandboxClassLoader::class.simpleName} instance created" }
-            SdkSandboxClassLoader(instrumentationConfig, runtimeSdk, ClassInstrumentor())
+            logger.debug { "${SdkSandboxClassLoader::class.simpleName} instance created for $key." }
+            SdkSandboxClassLoader(instrumentationConfig, runtimeSdk, classInstrumentor)
         }
     }
 
-    private data class Key(private val configuration: InstrumentationConfiguration, private val runtimeSdk: Sdk)
+    private data class Key(
+        private val configuration: InstrumentationConfiguration,
+        private val runtimeSdk: Sdk,
+        private val classInstrumentor: ClassInstrumentor,
+    )
 
     private companion object {
         @JvmStatic
