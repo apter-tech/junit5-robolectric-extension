@@ -1,13 +1,13 @@
 package tech.apter.junit.jupiter.robolectric.internal
 
-import org.robolectric.ApkLoader
 import org.robolectric.annotation.SQLiteMode
 import org.robolectric.internal.AndroidSandbox
 import org.robolectric.internal.ResourcesMode
-import org.robolectric.internal.bytecode.ClassInstrumentor
+import org.robolectric.internal.SandboxManager.SandboxBuilder
 import org.robolectric.internal.bytecode.InstrumentationConfiguration
-import org.robolectric.internal.bytecode.ShadowProviders
 import org.robolectric.pluginapi.Sdk
+import org.robolectric.plugins.SdkCollection
+import org.robolectric.util.inject.Injector
 import tech.apter.junit.jupiter.robolectric.internal.tools.TestUtil
 import kotlin.test.Ignore
 import kotlin.test.Test
@@ -66,16 +66,17 @@ class JUnit5RobolectricSandboxBuilderTest {
 
     private fun subjectUnderTest(
         action: JUnit5RobolectricSandboxBuilder.() -> Unit
-    ): JUnit5RobolectricSandboxBuilder = JUnit5RobolectricSandboxBuilder(
-        ApkLoader(),
-        AndroidSandbox.TestEnvironmentSpec(),
-        ShadowProviders(emptyList()),
-        ClassInstrumentor(),
-    ).apply(action)
+    ): JUnit5RobolectricSandboxBuilder = Injector.Builder()
+        .bind(SandboxBuilder::class.java, JUnit5RobolectricSandboxBuilder::class.java)
+        .bind(SdkCollection::class.java, TestUtil.sdkCollection)
+        .build()
+        .getInstance(JUnit5RobolectricSandboxBuilder::class.java)
+        .apply(action)
 
     companion object {
         private fun createInstrumentationConfiguration() =
-            InstrumentationConfiguration.newBuilder().doNotAcquirePackage("java.")
+            InstrumentationConfiguration.newBuilder()
+                .doNotAcquirePackage("java.")
                 .doNotAcquirePackage("jdk.internal.")
                 .doNotAcquirePackage("sun.")
                 .doNotAcquirePackage("org.robolectric.annotation.")
@@ -83,6 +84,7 @@ class JUnit5RobolectricSandboxBuilderTest {
                 .doNotAcquirePackage("org.robolectric.pluginapi.")
                 .doNotAcquirePackage("org.robolectric.util.")
                 .doNotAcquirePackage("org.junit")
+                .doNotAcquireClass(JUnit5RobolectricSandboxBuilder::class.java)
                 .build()
     }
 }
