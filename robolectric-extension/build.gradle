@@ -1,21 +1,15 @@
+import org.robolectric.gradle.AarDepsPlugin
+
 plugins {
-    alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.kotlinAndroid)
-    alias(libs.plugins.androidJUnit5)
+    alias(libs.plugins.kotlinJvm)
+
 }
 
-android {
-    defaultConfig {
-        namespace = "$group.$name"
-        compileOptions {
-            compileSdk libs.versions.androidCompileSdk.get().toInteger()
-        }
-    }
-    testOptions {
-        unitTests.all {
-            useJUnitPlatform()
-        }
-    }
+apply plugin: AarDepsPlugin
+
+configurations.configureEach { configuration ->
+    configuration.exclude(group: 'androidx.tracing', module: 'tracing')
+    configuration.exclude(group: 'androidx.annotation', module: 'annotation-experimental')
 }
 
 dependencies {
@@ -37,4 +31,8 @@ dependencies {
 
 kotlin {
     jvmToolchain(libs.versions.jvmToolchain.get().toInteger())
+}
+
+test {
+    useJUnitPlatform()
 }
