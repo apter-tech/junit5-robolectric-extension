@@ -2,7 +2,6 @@ import org.robolectric.gradle.AarDepsPlugin
 
 plugins {
     alias(libs.plugins.kotlinJvm)
-
 }
 
 apply plugin: AarDepsPlugin
