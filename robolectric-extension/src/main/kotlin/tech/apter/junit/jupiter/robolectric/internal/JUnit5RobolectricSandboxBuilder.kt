@@ -29,8 +29,9 @@ internal class JUnit5RobolectricSandboxBuilder @Inject constructor(
         resourcesMode: ResourcesMode,
         sqLiteMode: SQLiteMode.Mode,
     ): AndroidSandbox {
+        logger.trace { "build" }
         val sdkSandboxClassLoader = getOrCreateClassLoader(instrumentationConfig, runtimeSdk)
-        return AndroidSandbox(
+        return JUnit5RobolectricAndroidSandbox(
             runtimeSdk,
             compileSdk,
             resourcesMode,
@@ -46,7 +47,7 @@ internal class JUnit5RobolectricSandboxBuilder @Inject constructor(
         instrumentationConfig: InstrumentationConfiguration,
         runtimeSdk: Sdk,
     ): SdkSandboxClassLoader {
-        val key = Key(instrumentationConfig, runtimeSdk, classInstrumentor)
+        val key = Key(instrumentationConfig, runtimeSdk)
         return classLoaderCache.getOrPut(key) {
             logger.debug { "${SdkSandboxClassLoader::class.simpleName} instance created for $key." }
             SdkSandboxClassLoader(instrumentationConfig, runtimeSdk, classInstrumentor)
@@ -56,7 +57,6 @@ internal class JUnit5RobolectricSandboxBuilder @Inject constructor(
     private data class Key(
         private val configuration: InstrumentationConfiguration,
         private val runtimeSdk: Sdk,
-        private val classInstrumentor: ClassInstrumentor,
     )
 
     private companion object {
