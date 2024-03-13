@@ -8,6 +8,7 @@ import org.robolectric.internal.SandboxTestRunner
 import org.robolectric.internal.bytecode.InstrumentationConfiguration
 import org.robolectric.internal.bytecode.Sandbox
 import org.robolectric.util.inject.Injector
+import tech.apter.junit.jupiter.robolectric.RobolectricExtension
 
 internal class JUnit5RobolectricTestRunner(clazz: Class<*>, injector: Injector = defaultInjectorBuilder().build()) :
     RobolectricTestRunner(clazz, injector) {
@@ -27,26 +28,25 @@ internal class JUnit5RobolectricTestRunner(clazz: Class<*>, injector: Injector =
         frameworkMethod: FrameworkMethod,
         bootstrappedMethod: Method,
     ) {
-        logger.trace {
-            "runBeforeTest ${bootstrappedMethod.declaringClass.simpleName}::${bootstrappedMethod.name}"
-        }
+        logger.trace { "runBeforeTest ${bootstrappedMethod.declaringClass.simpleName}::${bootstrappedMethod.name}" }
         super.beforeTest(sdkEnvironment, frameworkMethod, bootstrappedMethod)
     }
 
     fun runAfterTest(frameworkMethod: FrameworkMethod, bootstrappedMethod: Method) {
-        logger.trace {
-            "runAfterTest${bootstrappedMethod.declaringClass.simpleName}::${bootstrappedMethod.name}"
-        }
-        try {
-            super.afterTest(frameworkMethod, bootstrappedMethod)
-        } finally {
-            super.finallyAfterTest(frameworkMethod)
-        }
+        logger.trace { "runAfterTest ${frameworkMethod.declaringClass.simpleName}::${frameworkMethod.name}" }
+        super.afterTest(frameworkMethod, bootstrappedMethod)
+    }
+
+    fun runFinallyAfterTest(frameworkMethod: FrameworkMethod) {
+        logger.trace { "runFinallyAfterTest ${frameworkMethod.declaringClass.simpleName}::${frameworkMethod.name}" }
+        super.finallyAfterTest(frameworkMethod)
     }
 
     override fun createClassLoaderConfig(method: FrameworkMethod): InstrumentationConfiguration {
+        logger.trace { "createClassLoaderConfig for ${method.name}" }
         return InstrumentationConfiguration.Builder(super.createClassLoaderConfig(method))
-            .doNotAcquireClass(JUnit5RobolectricSandboxBuilder::class.java)
+            .doNotAcquirePackage("tech.apter.junit.jupiter.robolectric.internal")
+            .doNotAcquireClass(RobolectricExtension::class.java)
             .build()
     }
 
@@ -75,6 +75,7 @@ internal class JUnit5RobolectricTestRunner(clazz: Class<*>, injector: Injector =
             errors: MutableList<Throwable>,
         ) = validatePublicVoidNoArgJUnit5Methods(annotation, isStatic, errors)
     }
+
 
     private companion object {
         private fun defaultInjectorBuilder() = defaultInjector()

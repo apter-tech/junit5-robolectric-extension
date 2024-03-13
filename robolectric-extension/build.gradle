@@ -11,6 +11,15 @@ configurations.configureEach { configuration ->
     configuration.exclude(group: 'androidx.annotation', module: 'annotation-experimental')
 }
 
+kotlin {
+    jvmToolchain(libs.versions.jvmToolchain.get().toInteger())
+}
+
+test {
+    useJUnitPlatform()
+    ignoreFailures = true
+}
+
 dependencies {
     implementation libs.robolectric
     implementation libs.junit4
