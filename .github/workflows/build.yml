@@ -33,6 +33,8 @@ jobs:
           retention-days: 5
   kover:
     runs-on: ubuntu-22.04
+    needs:
+      - build
     permissions:
       actions: read
       checks: write
