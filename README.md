@@ -61,7 +61,7 @@ android {
 }
 
 dependencies {
-    testImplementation("tech.apter.junit5:robolectric-extension:0.1.0")
+    testImplementation("tech.apter.junit.jupiter:robolectric-extension:0.1.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:<latest.release>") // JUnit 5 Jupiter Engine
     // Optional dependencies if you want to use different version than used by the extension
     testImplementation("org.junit.jupiter:junit-jupiter-api:<latest.release>") // Latest JUnit 5 Jupiter API
@@ -88,9 +88,9 @@ android {
 }
 
 dependencies {
-    testImplementation 'tech.apter.junit5:robolectric-extension:0.1.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:<latest.release>' // JUnit 5 Jupiter Engine
-    // Optional dependencies if you want to use different version than used by the extension
+    testImplementation 'tech.apter.junit.jupiter:robolectric-extension:0.1.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:<latest.release>' // Latest JUnit 5 Jupiter Engine
+    // Optional dependencies if you want to use different versions than used by the extension
     testImplementation 'org.junit.jupiter:junit-jupiter-api:<latest.release>' // Latest JUnit 5 Jupiter API
     testImplementation 'org.robolectric:robolectric:<latest.release>' // Latest Robolectric version
 }
