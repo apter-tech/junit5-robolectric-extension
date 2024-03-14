@@ -8,5 +8,7 @@ allprojects {
 }
 
 dependencies {
+    kover(project(':integration-tests:agp-groovy-dsl'))
+    kover(project(':integration-tests:agp-kotlin-dsl'))
     kover(project(':robolectric-extension'))
 }

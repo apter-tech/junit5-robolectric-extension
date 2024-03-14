@@ -19,7 +19,7 @@ kotlin {
 
 test {
     useJUnitPlatform()
-    jvmArgs '-Djunit.platform.launcher.interceptors.enabled=true'
+    jvmArgs('-Djunit.platform.launcher.interceptors.enabled=true')
 }
 
 detekt {
@@ -30,18 +30,57 @@ detekt {
 dependencies {
     detektPlugins(libs.detektFormatting)
     detektPlugins(libs.detektRulesLibraries)
-    implementation libs.robolectric
-    implementation libs.junit4
-    implementation platform(libs.junit5Bom)
-    implementation libs.bundles.junit5
+    api(libs.robolectric)
+    implementation(libs.junit4)
+    implementation(platform(libs.junit5Bom))
+    api(libs.junit5JupiterApi)
+    implementation(libs.junit5PlatformLauncher)
     implementation(libs.guavaConstraint) {
         because 'CVE-2023-2976 7.1 Transitive Files or Directories Accessible to External Parties vulnerability ' +
                 'with High severity found'
     }
-    testImplementation libs.robolectricAndroidAll
-    testImplementation libs.junit4
-    testImplementation libs.androidxTestExtJunit
-    testImplementation libs.kotlinTestJUnit5
-    testImplementation libs.junit5JupiterParams
-    testRuntimeOnly libs.junit5JupiterEngine
+    testImplementation(libs.robolectricAndroidAll)
+    testImplementation(libs.junit4)
+    testImplementation(libs.androidxTestExtJunit)
+    testImplementation(libs.kotlinTestJUnit5)
+    testImplementation(libs.junit5JupiterParams)
+    testRuntimeOnly(libs.junit5JupiterEngine)
+}
+
+private void bashExecute(String command) {
+    final process = command.execute()
+    final error = process.errorReader().readLines().join("\n")
+    if (!error.isBlank()) {
+        logger.error("error during execution of:\ncommand:$command\ndetails:\n$error")
+    }
+}
+
+tasks.register('generateAndroidR') {
+    final androidHome = System.getenv("ANDROID_HOME")
+    final aapt = "$androidHome/build-tools/${libs.versions.androidBuildTools.get()}/aapt"
+    final testSourceSet = sourceSets.named('test').get()
+    final testJavaSourceDir = testSourceSet.allSource.sourceDirectories.find { it.name == 'java' } as File
+    final testResourcesDir = testSourceSet.allSource.sourceDirectories.find { it.name == 'resources' } as File
+    final androidResDir = new File(testResourcesDir, 'res')
+    final androidAssetsDir = new File(testResourcesDir, 'assets')
+    final outputResourcesFile = new File(testResourcesDir, 'resources.ap_')
+    final androidJarFile = "$androidHome/platforms/android-${libs.versions.androidCompileSdk.get()}/android.jar"
+    final androidManifestFile = new File(testResourcesDir.parentFile, 'AndroidManifest.xml')
+
+    inputs.dir(androidResDir)
+    inputs.dir(androidAssetsDir)
+    inputs.file(androidManifestFile)
+
+    outputs.file(outputResourcesFile)
+    outputs.dir(testJavaSourceDir)
+    doLast {
+        final aaptCommand = "$aapt p -v -f -m --auto-add-overlay -I $androidJarFile " +
+            "-S $androidResDir " +
+            "-M $androidManifestFile.path " +
+            "-A $androidAssetsDir.path " +
+            "-F $outputResourcesFile.path " +
+            "-J $testJavaSourceDir.path " +
+            "--no-version-vectors"
+        bashExecute(aaptCommand)
+    }
 }
