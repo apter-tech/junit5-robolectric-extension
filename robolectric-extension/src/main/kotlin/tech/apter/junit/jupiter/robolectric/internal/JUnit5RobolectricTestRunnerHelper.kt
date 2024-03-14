@@ -1,9 +1,9 @@
 package tech.apter.junit.jupiter.robolectric.internal
 
 import com.google.common.annotations.VisibleForTesting
-import java.lang.reflect.Method
 import org.junit.runners.model.FrameworkMethod
 import org.robolectric.internal.bytecode.Sandbox
+import java.lang.reflect.Method
 
 internal class JUnit5RobolectricTestRunnerHelper {
     private inline val logger get() = createLogger()

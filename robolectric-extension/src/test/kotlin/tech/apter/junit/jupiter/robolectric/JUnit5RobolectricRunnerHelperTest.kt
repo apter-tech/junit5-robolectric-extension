@@ -4,9 +4,9 @@ import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import org.robolectric.internal.AndroidSandbox.SdkSandboxClassLoader
 import org.robolectric.internal.bytecode.Sandbox
+import tech.apter.junit.jupiter.robolectric.fakes.SingleTestMethodJunitJupiterTest
+import tech.apter.junit.jupiter.robolectric.fakes.TwoTestMethodsJunitJupiterTest
 import tech.apter.junit.jupiter.robolectric.internal.JUnit5RobolectricTestRunnerHelper
-import tech.apter.junit.jupiter.robolectric.internal.fakes.SingleTestMethodJunitJupiterTest
-import tech.apter.junit.jupiter.robolectric.internal.fakes.TwoTestMethodsJunitJupiterTest
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
@@ -149,7 +149,6 @@ class JUnit5RobolectricRunnerHelperTest {
             it.name == TwoTestMethodsJunitJupiterTest::testMethod2.name
         }
         val runnerHelper = subjectUnderTest {
-
             // And
             createTestEnvironmentForClass(testClass)
 
@@ -166,6 +165,8 @@ class JUnit5RobolectricRunnerHelperTest {
         assertThrows<IllegalArgumentException> { runnerHelper.frameworkMethod }
     }
 
-    private fun subjectUnderTest(action: JUnit5RobolectricTestRunnerHelper.() -> Unit): JUnit5RobolectricTestRunnerHelper =
+    private fun subjectUnderTest(
+        action: JUnit5RobolectricTestRunnerHelper.() -> Unit
+    ): JUnit5RobolectricTestRunnerHelper =
         JUnit5RobolectricTestRunnerHelper().apply(action)
 }

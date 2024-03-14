@@ -1,9 +1,10 @@
 package tech.apter.junit.jupiter.robolectric.internal
 
-import java.util.concurrent.atomic.AtomicBoolean
 import org.junit.platform.launcher.LauncherInterceptor
 import tech.apter.junit.jupiter.robolectric.internal.placeholder.RobolectricPlaceholderTest
+import java.util.concurrent.atomic.AtomicBoolean
 
+@Suppress("LibraryEntitiesShouldNotBePublic")
 class RobolectricLauncherInterceptor : LauncherInterceptor {
     private inline val logger get() = createLogger()
     private val testRunnerHelper by lazy { JUnit5RobolectricTestRunnerHelper() }

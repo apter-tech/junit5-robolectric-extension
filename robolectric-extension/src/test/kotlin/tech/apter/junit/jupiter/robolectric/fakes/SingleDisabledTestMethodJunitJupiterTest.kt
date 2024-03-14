@@ -1,4 +1,4 @@
-package tech.apter.junit.jupiter.robolectric.internal.fakes
+package tech.apter.junit.jupiter.robolectric.fakes
 
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test

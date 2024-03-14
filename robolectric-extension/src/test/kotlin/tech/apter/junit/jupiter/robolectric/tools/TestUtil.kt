@@ -1,17 +1,17 @@
-package tech.apter.junit.jupiter.robolectric.internal.tools
+package tech.apter.junit.jupiter.robolectric.tools
 
 import android.R
 import com.google.common.io.CharStreams
+import org.robolectric.plugins.SdkCollection
+import org.robolectric.res.Fs
+import org.robolectric.res.ResourcePath
+import org.robolectric.util.inject.Injector
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.nio.file.Path
 import java.util.Properties
-import org.robolectric.plugins.SdkCollection
-import org.robolectric.res.Fs
-import org.robolectric.res.ResourcePath
-import org.robolectric.util.inject.Injector
 
 object TestUtil {
     private var SYSTEM_RESOURCE_PATH: ResourcePath? = null
@@ -66,8 +66,8 @@ object TestUtil {
     }
 
     @Throws(IOException::class)
-    fun readString(`is`: InputStream): String {
-        return CharStreams.toString(InputStreamReader(`is`, "UTF-8"))
+    fun readString(inputStream: InputStream): String {
+        return CharStreams.toString(InputStreamReader(inputStream, "UTF-8"))
     }
 
     fun resetSystemProperty(name: String, value: String?) {

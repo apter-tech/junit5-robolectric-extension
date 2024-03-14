@@ -1,15 +1,16 @@
 package tech.apter.junit.jupiter.robolectric.internal
 
+import org.robolectric.util.Util
 import java.util.concurrent.Callable
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.ThreadFactory
-import org.robolectric.util.Util
 
 internal object AndroidMainThreadExecutor {
     private val executorService: ExecutorService = Executors.newSingleThreadExecutor(mainThreadFactory())
 
+    @Suppress("SwallowedException", "TooGenericExceptionThrown")
     fun <T : Any?> execute(callable: Callable<T>): T {
         val future = executorService.submit(callable)
         try {

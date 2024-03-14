@@ -1,7 +1,5 @@
 package tech.apter.junit.jupiter.robolectric.internal
 
-import java.util.Collections
-import javax.inject.Inject
 import org.robolectric.ApkLoader
 import org.robolectric.annotation.SQLiteMode
 import org.robolectric.internal.AndroidSandbox
@@ -12,6 +10,8 @@ import org.robolectric.internal.bytecode.ClassInstrumentor
 import org.robolectric.internal.bytecode.InstrumentationConfiguration
 import org.robolectric.internal.bytecode.ShadowProviders
 import org.robolectric.pluginapi.Sdk
+import java.util.Collections
+import javax.inject.Inject
 
 internal class JUnit5RobolectricSandboxBuilder @Inject constructor(
     private val apkLoader: ApkLoader,

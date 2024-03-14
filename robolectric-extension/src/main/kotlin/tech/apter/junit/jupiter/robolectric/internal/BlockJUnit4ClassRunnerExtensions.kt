@@ -51,7 +51,8 @@ internal fun BlockJUnit4ClassRunner.isJUnit5Ignored(child: FrameworkMethod) =
  */
 internal fun BlockJUnit4ClassRunner.validatePublicVoidNoArgJUnit5Methods(
     annotation: Class<out Annotation>,
-    isStatic: Boolean, errors: MutableList<Throwable>,
+    isStatic: Boolean,
+    errors: MutableList<Throwable>,
 ) {
     if (annotation == org.junit.Test::class.java) {
         validatePublicVoidNoArgMethods(Test::class.java, isStatic, errors)
