@@ -1,8 +1,5 @@
 package tech.apter.junit.jupiter.robolectric
 
-import java.lang.reflect.Method
-import java.lang.reflect.Modifier
-import java.util.concurrent.atomic.AtomicBoolean
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.extension.AfterAllCallback
 import org.junit.jupiter.api.extension.AfterEachCallback
@@ -18,7 +15,11 @@ import tech.apter.junit.jupiter.robolectric.internal.createLogger
 import tech.apter.junit.jupiter.robolectric.internal.runOnMainThread
 import tech.apter.junit.jupiter.robolectric.internal.runOnMainThreadWithRobolectric
 import tech.apter.junit.jupiter.robolectric.internal.runWithRobolectric
+import java.lang.reflect.Method
+import java.lang.reflect.Modifier
+import java.util.concurrent.atomic.AtomicBoolean
 
+@Suppress("TooManyFunctions")
 class RobolectricExtension :
     InvocationInterceptor,
     BeforeAllCallback,
@@ -90,7 +91,9 @@ class RobolectricExtension :
         invocationContext: ReflectiveInvocationContext<Method>,
         extensionContext: ExtensionContext,
     ) {
-        logger.trace { "interceptBeforeEachMethod ${extensionContext.requiredTestClass}::${extensionContext.requiredTestMethod}" }
+        logger.trace {
+            "interceptBeforeEachMethod ${extensionContext.requiredTestClass}::${extensionContext.requiredTestMethod}"
+        }
         robolectricTestRunnerHelper.runOnMainThreadWithRobolectric {
             super.interceptBeforeEachMethod(invocation, invocationContext, extensionContext)
         }
@@ -101,7 +104,9 @@ class RobolectricExtension :
         invocationContext: DynamicTestInvocationContext,
         extensionContext: ExtensionContext,
     ) {
-        logger.trace { "interceptDynamicTest ${extensionContext.requiredTestClass}::${extensionContext.requiredTestMethod}" }
+        logger.trace {
+            "interceptDynamicTest ${extensionContext.requiredTestClass}::${extensionContext.requiredTestMethod}"
+        }
         robolectricTestRunnerHelper.runOnMainThreadWithRobolectric {
             super.interceptDynamicTest(invocation, invocationContext, extensionContext)
         }
@@ -112,7 +117,9 @@ class RobolectricExtension :
         invocationContext: ReflectiveInvocationContext<Method>,
         extensionContext: ExtensionContext,
     ) {
-        logger.trace { "interceptTestMethod ${extensionContext.requiredTestClass}::${extensionContext.requiredTestMethod}" }
+        logger.trace {
+            "interceptTestMethod ${extensionContext.requiredTestClass}::${extensionContext.requiredTestMethod}"
+        }
         robolectricTestRunnerHelper.runOnMainThreadWithRobolectric {
             super.interceptTestMethod(invocation, invocationContext, extensionContext)
         }
@@ -123,7 +130,9 @@ class RobolectricExtension :
         invocationContext: ReflectiveInvocationContext<Method>,
         extensionContext: ExtensionContext,
     ) {
-        logger.trace { "interceptTestTemplateMethod ${extensionContext.requiredTestClass}::${extensionContext.requiredTestMethod}" }
+        logger.trace {
+            "interceptTestTemplateMethod ${extensionContext.requiredTestClass}::${extensionContext.requiredTestMethod}"
+        }
         robolectricTestRunnerHelper.runOnMainThreadWithRobolectric {
             super.interceptTestTemplateMethod(invocation, invocationContext, extensionContext)
         }
@@ -134,7 +143,9 @@ class RobolectricExtension :
         invocationContext: ReflectiveInvocationContext<Method>,
         extensionContext: ExtensionContext,
     ) {
-        logger.trace { "interceptAfterEachMethod ${extensionContext.requiredTestClass}::${extensionContext.requiredTestMethod}" }
+        logger.trace {
+            "interceptAfterEachMethod ${extensionContext.requiredTestClass}::${extensionContext.requiredTestMethod}"
+        }
         robolectricTestRunnerHelper.runOnMainThreadWithRobolectric {
             super.interceptAfterEachMethod(invocation, invocationContext, extensionContext)
         }
