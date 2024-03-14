@@ -1,6 +1,5 @@
 plugins {
-    id 'java-library'
-    id 'groovy'
+    id('groovy')
 }
 
 repositories {
@@ -10,10 +9,10 @@ repositories {
 }
 
 dependencies {
-    compileOnly gradleApi()
-    compileOnly localGroovy()
-    implementation libs.guava
-    implementation libs.androidBuildTools
+    compileOnly(gradleApi())
+    compileOnly(localGroovy())
+    implementation(libs.guava)
+    implementation(libs.androidGradle)
 }
 
 java {
@@ -24,7 +23,7 @@ java {
 
 task downloadAarDepsPlugin {
     final from = "https://raw.githubusercontent.com/robolectric/robolectric/robolectric-${libs.versions.robolectric.get()}/buildSrc/src/main/groovy/org/robolectric/gradle/AarDepsPlugin.java"
-    final groovySourceSet = new File(sourceSets.findByName('main').allSource.sourceDirectories.find { it.name == 'groovy' }.path)
+    final groovySourceSet = sourceSets.findByName('main').allSource.sourceDirectories.find { it.name == 'groovy' } as File
     final to = new File(groovySourceSet, '/org/robolectric/gradle/AarDepsPlugin.java')
 
     inputs.property("from", from)

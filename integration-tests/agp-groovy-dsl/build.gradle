@@ -1,0 +1,37 @@
+plugins {
+    id('com.android.library')
+    alias(libs.plugins.kotlinAndroid)
+    alias(libs.plugins.kotlinxKover)
+    alias(libs.plugins.detekt)
+}
+
+android {
+    namespace = 'tech.apter.junit.jupiter.robolectric.integration.tests.agp.groovy.dsl'
+    compileSdk = libs.versions.androidCompileSdk.get().toInteger()
+    buildToolsVersion = libs.versions.androidBuildTools.get()
+
+    defaultConfig {
+        minSdk = libs.versions.androidMinimumSdk.get().toInteger()
+    }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+            all {
+                useJUnitPlatform()
+                jvmArgs('-Djunit.platform.launcher.interceptors.enabled=true')
+            }
+        }
+    }
+}
+
+kotlin {
+    jvmToolchain(libs.versions.jvmToolchain.get().toInteger())
+}
+
+dependencies {
+    testImplementation(project(':robolectric-extension'))
+    testImplementation(libs.robolectric)
+    testImplementation(libs.junit5JupiterApi)
+    testRuntimeOnly(libs.junit5JupiterEngine)
+}
