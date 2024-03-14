@@ -36,11 +36,3 @@ dependencies {
     testImplementation libs.junit5JupiterParams
     testRuntimeOnly libs.junit5JupiterEngine
 }
-
-kotlin {
-    jvmToolchain(libs.versions.jvmToolchain.get().toInteger())
-}
-
-test {
-    useJUnitPlatform()
-}

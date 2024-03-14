@@ -10,6 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     permissions:
+      actions: write
       contents: read
 
     steps:
@@ -22,4 +23,43 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
       - name: Build with Gradle Wrapper
-        run: ./gradlew build
+        run: ./gradlew build koverXmlReport
+      - name: Upload coverage report
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+        if: ${{ hashFiles('build/reports/kover/report.xml') != '' }}
+        with:
+          name: kover-report
+          path: ${{ github.workspace }}/build/reports/kover/report.xml
+          retention-days: 5
+  kover:
+    runs-on: ubuntu-22.04
+    permissions:
+      actions: read
+      checks: write
+      pull-requests: write
+
+    steps:
+      - name: Download coverage report
+        uses: actions/download-artifact@c850b930e6ba138125429b7e5c93fc707a7f8427 # v4.1.4
+        with:
+          name: kover-report
+      - name: Comment branch coverage report to PR
+        uses: mi-kas/kover-report@0befa22b2291fedc1eefd9ff8f9d5e3a9412168c # v1.8
+        if: ${{hashFiles('report.xml') != '' }}
+        with:
+          path: ${{ github.workspace }}/report.xml
+          title: Branch Coverage
+          update-comment: true
+          min-coverage-overall: 60
+          min-coverage-changed-files: 70
+          coverage-counter-type: BRANCH
+      - name: Comment line coverage report to PR
+        uses: mi-kas/kover-report@0befa22b2291fedc1eefd9ff8f9d5e3a9412168c # v1.8
+        if: ${{hashFiles('report.xml') != '' }}
+        with:
+          path: ${{ github.workspace }}/report.xml
+          title: Line Coverage
+          update-comment: true
+          min-coverage-overall: 60
+          min-coverage-changed-files: 70
+          coverage-counter-type: LINE
