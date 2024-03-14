@@ -2,6 +2,7 @@ import org.robolectric.gradle.AarDepsPlugin
 
 plugins {
     alias(libs.plugins.kotlinJvm)
+    alias(libs.plugins.kotlinxKover)
 }
 
 apply plugin: AarDepsPlugin
@@ -35,12 +36,4 @@ dependencies {
     testImplementation libs.kotlinTestJUnit5
     testImplementation libs.junit5JupiterParams
     testRuntimeOnly libs.junit5JupiterEngine
-}
-
-kotlin {
-    jvmToolchain(libs.versions.jvmToolchain.get().toInteger())
-}
-
-test {
-    useJUnitPlatform()
 }
