@@ -2,7 +2,7 @@
 androidBuildTools = "8.3.0"
 androidJUnit5 = "1.10.0.0"
 androidxTestExtJunit = "1.1.5"
-guava = "33.0.0-jre"
+guava = "33.1.0-jre"
 junit4 = "4.13.2"
 junit5 = "5.10.2"
 jvmToolchain = "17"
