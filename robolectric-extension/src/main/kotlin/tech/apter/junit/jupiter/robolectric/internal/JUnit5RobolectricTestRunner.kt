@@ -1,6 +1,5 @@
 package tech.apter.junit.jupiter.robolectric.internal
 
-import java.lang.reflect.Method
 import org.junit.runners.model.FrameworkMethod
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.internal.SandboxManager.SandboxBuilder
@@ -9,7 +8,9 @@ import org.robolectric.internal.bytecode.InstrumentationConfiguration
 import org.robolectric.internal.bytecode.Sandbox
 import org.robolectric.util.inject.Injector
 import tech.apter.junit.jupiter.robolectric.RobolectricExtension
+import java.lang.reflect.Method
 
+@Suppress("TooManyFunctions")
 internal class JUnit5RobolectricTestRunner(clazz: Class<*>, injector: Injector = defaultInjectorBuilder().build()) :
     RobolectricTestRunner(clazz, injector) {
     private val logger get() = createLogger()
@@ -75,7 +76,6 @@ internal class JUnit5RobolectricTestRunner(clazz: Class<*>, injector: Injector =
             errors: MutableList<Throwable>,
         ) = validatePublicVoidNoArgJUnit5Methods(annotation, isStatic, errors)
     }
-
 
     private companion object {
         private fun defaultInjectorBuilder() = defaultInjector()

@@ -1,13 +1,14 @@
 package tech.apter.junit.jupiter.robolectric.internal
 
-import java.util.concurrent.Callable
 import org.robolectric.ApkLoader
 import org.robolectric.annotation.SQLiteMode
 import org.robolectric.internal.AndroidSandbox
 import org.robolectric.internal.ResourcesMode
 import org.robolectric.internal.bytecode.ShadowProviders
 import org.robolectric.pluginapi.Sdk
+import java.util.concurrent.Callable
 
+@Suppress("LongParameterList")
 internal class JUnit5RobolectricAndroidSandbox(
     runtimeSdk: Sdk,
     compileSdk: Sdk,

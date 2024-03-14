@@ -1,10 +1,10 @@
-package tech.apter.junit.jupiter.robolectric.internal.fakes
+package tech.apter.junit.jupiter.robolectric.fakes
 
-import java.util.stream.Stream
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
+import java.util.stream.Stream
 import kotlin.test.assertContains
 
 @Disabled
@@ -15,8 +15,6 @@ class SingleParameterizedTestMethodJunitJupiterTest {
 
     companion object {
         @JvmStatic
-        fun testParameters(): Stream<Arguments> = Stream.of(
-            Arguments.of(1), Arguments.of(2)
-        )
+        fun testParameters(): Stream<Arguments> = Stream.of(Arguments.of(1), Arguments.of(2))
     }
 }

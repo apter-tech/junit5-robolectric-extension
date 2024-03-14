@@ -8,7 +8,7 @@ import org.robolectric.internal.bytecode.InstrumentationConfiguration
 import org.robolectric.pluginapi.Sdk
 import org.robolectric.plugins.SdkCollection
 import org.robolectric.util.inject.Injector
-import tech.apter.junit.jupiter.robolectric.internal.tools.TestUtil
+import tech.apter.junit.jupiter.robolectric.tools.TestUtil
 import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertIs

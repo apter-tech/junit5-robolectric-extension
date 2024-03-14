@@ -2,6 +2,7 @@
 androidBuildTools = "8.3.0"
 androidJUnit5 = "1.10.0.0"
 androidxTestExtJunit = "1.1.5"
+detekt = "1.23.5"
 guava = "33.1.0-jre"
 junit4 = "4.13.2"
 junit5 = "5.10.2"
@@ -16,6 +17,8 @@ sources = "sources"
 [libraries]
 androidBuildTools = { module = "com.android.tools.build:gradle", version.ref = "androidBuildTools" }
 androidxTestExtJunit = { module = "androidx.test.ext:junit", version.ref = "androidxTestExtJunit" }
+detektFormatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
+detektRulesLibraries = { module = "io.gitlab.arturbosch.detekt:detekt-rules-libraries", version.ref = "detekt" }
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
 guavaConstraint = { module = "com.google.guava:guava", version = { require = "[32.0.1-jre,]" } }
 junit4 = { module = "junit:junit", version.ref = "junit4" }
@@ -31,6 +34,7 @@ robolectricAndroidAll = { module = "org.robolectric:android-all", version.ref = 
 [plugins]
 androidJUnit5 = { id = "de.mannodermaus.android-junit5", version.ref = "androidJUnit5" }
 androidLibrary = { id = "com.android.library", version.ref = "androidBuildTools" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlinxKover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }

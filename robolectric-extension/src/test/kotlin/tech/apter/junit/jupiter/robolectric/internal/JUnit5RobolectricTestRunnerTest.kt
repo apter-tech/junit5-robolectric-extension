@@ -5,10 +5,10 @@ import org.junit.runner.Description
 import org.junit.runner.notification.Failure
 import org.junit.runner.notification.RunListener
 import org.junit.runner.notification.RunNotifier
-import tech.apter.junit.jupiter.robolectric.internal.fakes.SingleDisabledTestMethodJunitJupiterTest
-import tech.apter.junit.jupiter.robolectric.internal.fakes.SingleParameterizedTestMethodJunitJupiterTest
-import tech.apter.junit.jupiter.robolectric.internal.fakes.SingleTestMethodJunitJupiterTest
-import tech.apter.junit.jupiter.robolectric.internal.tools.TestUtil
+import tech.apter.junit.jupiter.robolectric.fakes.SingleDisabledTestMethodJunitJupiterTest
+import tech.apter.junit.jupiter.robolectric.fakes.SingleParameterizedTestMethodJunitJupiterTest
+import tech.apter.junit.jupiter.robolectric.fakes.SingleTestMethodJunitJupiterTest
+import tech.apter.junit.jupiter.robolectric.tools.TestUtil
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
