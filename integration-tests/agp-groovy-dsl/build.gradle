@@ -36,6 +36,8 @@ kotlin {
 }
 
 dependencies {
+    detektPlugins(libs.detektFormatting)
+    detektPlugins(libs.detektRulesLibraries)
     testImplementation(project(':robolectric-extension'))
     testImplementation(libs.robolectric)
     testImplementation(libs.junit5JupiterApi)
