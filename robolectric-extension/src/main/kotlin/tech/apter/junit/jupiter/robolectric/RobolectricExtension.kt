@@ -19,7 +19,7 @@ import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 import java.util.concurrent.atomic.AtomicBoolean
 
-@Suppress("TooManyFunctions")
+@Suppress("TooManyFunctions", "LibraryEntitiesShouldNotBePublic")
 class RobolectricExtension :
     InvocationInterceptor,
     BeforeAllCallback,
@@ -51,7 +51,7 @@ class RobolectricExtension :
             .methods
             .filter {
                 it.getAnnotation(BeforeAll::class.java) != null &&
-                        Modifier.isStatic(it.modifiers)
+                    Modifier.isStatic(it.modifiers)
             }
 
         beforeAllMethods.forEach {
