@@ -4,8 +4,8 @@ import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import org.robolectric.internal.AndroidSandbox.SdkSandboxClassLoader
 import org.robolectric.internal.bytecode.Sandbox
-import tech.apter.junit.jupiter.robolectric.fakes.SingleTestMethodJunitJupiterTest
-import tech.apter.junit.jupiter.robolectric.fakes.TwoTestMethodsJunitJupiterTest
+import tech.apter.junit.jupiter.robolectric.dummies.SingleTestMethodJunitJupiterTest
+import tech.apter.junit.jupiter.robolectric.dummies.TwoTestMethodsJunitJupiterTest
 import tech.apter.junit.jupiter.robolectric.internal.JUnit5RobolectricTestRunnerHelper
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -20,11 +20,13 @@ class JUnit5RobolectricRunnerHelperTest {
     private var originalClassLoader: ClassLoader? = null
 
     @BeforeTest
+    @Throws(Exception::class)
     fun setUp() {
         originalClassLoader = JUnit5RobolectricTestRunnerHelper.interceptedClassLoader
     }
 
     @AfterTest
+    @Throws(Exception::class)
     fun tearDown() {
         Thread.currentThread().contextClassLoader = originalClassLoader
         originalClassLoader = null

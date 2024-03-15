@@ -49,7 +49,7 @@ internal class JUnit5RobolectricSandboxBuilder @Inject constructor(
     ): SdkSandboxClassLoader {
         val key = Key(instrumentationConfig, runtimeSdk)
         return classLoaderCache.getOrPut(key) {
-            logger.debug { "${SdkSandboxClassLoader::class.simpleName} instance created for $key." }
+            logger.debug { "Create ${SdkSandboxClassLoader::class.simpleName} instance for $runtimeSdk." }
             SdkSandboxClassLoader(instrumentationConfig, runtimeSdk, classInstrumentor)
         }
     }

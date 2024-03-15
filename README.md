@@ -14,6 +14,7 @@ in-memory environment.
   limitation in future releases.
 * **ClassLoader:** Robolectric's classloader is set before launching the tests. Every test in the suite will use the
   Robolectric's classloader, even if it is not annotated with the `RobolectricExtension`.
+* **Configuration:** Robolectric `@Config` annotation can only be used on class level.
 * **Experimental Status:** This extension is still under development, and its API might change in future versions.
 
 ## Installation
@@ -187,7 +188,7 @@ class RobolectricExtensionSelfTest {
 
 </details>
 
-<details open>
+<details>
 <summary>Java</summary>
 
 ```java
@@ -252,7 +253,7 @@ public class RobolectricExtensionSelfTest {
 ## Important Notes
 
 * Ensure `isIncludeAndroidResources` is set to true in your testOptions configuration to access Android resources for
-  your
+  your.
 * JUnit Platform Launcher Interceptors must be enabled (`junit.platform.launcher.interceptors.enabled=true`), otherwise
   test instances will not be created by Robolectric's classloader.
 * Parallel execution is currently not supported. Run tests sequentially for now.

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestFactory
 import org.junit.runners.BlockJUnit4ClassRunner
 import org.junit.runners.model.FrameworkMethod
 import java.util.Collections
@@ -24,6 +25,7 @@ private val parameterizedTestAnnotation: Class<out Annotation>? by lazy {
 
 internal fun BlockJUnit4ClassRunner.computeJUnit5TestMethods(): MutableList<FrameworkMethod> {
     val testMethods = testClass.getAnnotatedMethods(Test::class.java)
+    val testFactoryMethods = testClass.getAnnotatedMethods(TestFactory::class.java)
     val parameterizedTestMethods = if (parameterizedTestAnnotation == null) {
         emptyList()
     } else {
@@ -32,6 +34,7 @@ internal fun BlockJUnit4ClassRunner.computeJUnit5TestMethods(): MutableList<Fram
 
     val methods = mutableListOf<FrameworkMethod>()
     methods.addAll(testMethods)
+    methods.addAll(testFactoryMethods)
     methods.addAll(parameterizedTestMethods)
     return Collections.unmodifiableList(methods)
 }
