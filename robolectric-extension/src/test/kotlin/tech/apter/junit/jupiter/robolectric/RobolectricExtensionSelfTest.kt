@@ -25,7 +25,6 @@ import kotlin.test.assertNotNull
 import kotlin.test.assertSame
 import kotlin.test.assertTrue
 
-
 @ExtendWith(RobolectricExtension::class)
 @Config(application = RobolectricExtensionSelfTest.MyTestApplication::class)
 class RobolectricExtensionSelfTest {

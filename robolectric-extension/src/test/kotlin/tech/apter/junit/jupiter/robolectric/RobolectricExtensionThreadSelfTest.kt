@@ -1,13 +1,12 @@
 package tech.apter.junit.jupiter.robolectric
 
-import org.junit.After
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.extension.ExtendWith
+import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertTrue
-
 
 @ExtendWith(RobolectricExtension::class)
 class RobolectricExtensionThreadSelfTest {
@@ -18,7 +17,7 @@ class RobolectricExtensionThreadSelfTest {
         assertTrue { Thread.currentThread().contextClassLoader == sClassLoader }
     }
 
-    @After
+    @AfterTest
     @Throws(Exception::class)
     fun tearDown() {
         assertTrue { Thread.currentThread() == sThread }
