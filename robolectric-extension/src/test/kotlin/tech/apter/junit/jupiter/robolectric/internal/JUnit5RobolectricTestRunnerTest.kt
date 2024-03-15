@@ -5,9 +5,9 @@ import org.junit.runner.Description
 import org.junit.runner.notification.Failure
 import org.junit.runner.notification.RunListener
 import org.junit.runner.notification.RunNotifier
-import tech.apter.junit.jupiter.robolectric.fakes.SingleDisabledTestMethodJunitJupiterTest
-import tech.apter.junit.jupiter.robolectric.fakes.SingleParameterizedTestMethodJunitJupiterTest
-import tech.apter.junit.jupiter.robolectric.fakes.SingleTestMethodJunitJupiterTest
+import tech.apter.junit.jupiter.robolectric.dummies.SingleDisabledTestMethodJunitJupiterTest
+import tech.apter.junit.jupiter.robolectric.dummies.SingleParameterizedTestMethodJunitJupiterTest
+import tech.apter.junit.jupiter.robolectric.dummies.SingleTestMethodJunitJupiterTest
 import tech.apter.junit.jupiter.robolectric.tools.TestUtil
 import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
@@ -23,6 +23,7 @@ class JUnit5RobolectricTestRunnerTest {
     private var priorAlwaysInclude: String? = null
 
     @BeforeTest
+    @Throws(Exception::class)
     fun setUp() {
         testRunListener = JUnit5RobolectricTestRunListener()
         notifier = RunNotifier()
@@ -35,6 +36,7 @@ class JUnit5RobolectricTestRunnerTest {
     }
 
     @AfterTest
+    @Throws(Exception::class)
     fun tearDown() {
         notifier.removeListener(testRunListener)
         TestUtil.resetSystemProperty("robolectric.enabledSdks", priorEnabledSdks)

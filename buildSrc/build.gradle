@@ -23,7 +23,7 @@ java {
 
 task downloadAarDepsPlugin {
     final from = "https://raw.githubusercontent.com/robolectric/robolectric/robolectric-${libs.versions.robolectric.get()}/buildSrc/src/main/groovy/org/robolectric/gradle/AarDepsPlugin.java"
-    final groovySourceSet = sourceSets.findByName('main').allSource.sourceDirectories.find { it.name == 'groovy' } as File
+    final groovySourceSet = sourceSets.named('main').get().allSource.sourceDirectories.find { it.name == 'groovy' } as File
     final to = new File(groovySourceSet, '/org/robolectric/gradle/AarDepsPlugin.java')
 
     inputs.property("from", from)

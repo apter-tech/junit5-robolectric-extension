@@ -104,9 +104,7 @@ class RobolectricExtension :
         invocationContext: DynamicTestInvocationContext,
         extensionContext: ExtensionContext,
     ) {
-        logger.trace {
-            "interceptDynamicTest ${extensionContext.requiredTestClass}::${extensionContext.requiredTestMethod}"
-        }
+        logger.trace { "interceptDynamicTest ${extensionContext.displayName}" }
         robolectricTestRunnerHelper.runOnMainThreadWithRobolectric {
             super.interceptDynamicTest(invocation, invocationContext, extensionContext)
         }
