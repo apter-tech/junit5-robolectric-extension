@@ -8,10 +8,14 @@ import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.RepeatedTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestFactory
+import org.junit.jupiter.api.TestTemplate
 import org.junit.runners.BlockJUnit4ClassRunner
 import org.junit.runners.model.FrameworkMethod
+import org.junit.runners.model.TestClass
+import java.lang.reflect.Modifier
 import java.util.Collections
 
 private val parameterizedTestAnnotation: Class<out Annotation>? by lazy {
@@ -24,19 +28,35 @@ private val parameterizedTestAnnotation: Class<out Annotation>? by lazy {
 }
 
 internal fun BlockJUnit4ClassRunner.computeJUnit5TestMethods(): MutableList<FrameworkMethod> {
-    val testMethods = testClass.getAnnotatedMethods(Test::class.java)
-    val testFactoryMethods = testClass.getAnnotatedMethods(TestFactory::class.java)
-    val parameterizedTestMethods = if (parameterizedTestAnnotation == null) {
-        emptyList()
-    } else {
-        testClass.getAnnotatedMethods(parameterizedTestAnnotation)
+    fun testMethods(testClass: TestClass): MutableList<FrameworkMethod> {
+        val testMethods = testClass.getAnnotatedMethods(Test::class.java)
+        val testFactoryMethods = testClass.getAnnotatedMethods(TestFactory::class.java)
+        val repeatedTestMethods = testClass.getAnnotatedMethods(RepeatedTest::class.java)
+        val testTemplateMethods = testClass.getAnnotatedMethods(TestTemplate::class.java)
+        val parameterizedTestMethods = if (parameterizedTestAnnotation == null) {
+            emptyList()
+        } else {
+            testClass.getAnnotatedMethods(parameterizedTestAnnotation)
+        }
+
+        val nestedTestMethods = testClass
+            .javaClass
+            .declaredClasses
+            .filter { !Modifier.isStatic(it.modifiers) }
+            .map { testMethods(TestClass(it)) }
+            .flatten()
+
+        val methods = mutableListOf<FrameworkMethod>()
+        methods.addAll(testMethods)
+        methods.addAll(testTemplateMethods)
+        methods.addAll(testFactoryMethods)
+        methods.addAll(repeatedTestMethods)
+        methods.addAll(parameterizedTestMethods)
+        methods.addAll(nestedTestMethods)
+        return Collections.unmodifiableList(methods)
     }
 
-    val methods = mutableListOf<FrameworkMethod>()
-    methods.addAll(testMethods)
-    methods.addAll(testFactoryMethods)
-    methods.addAll(parameterizedTestMethods)
-    return Collections.unmodifiableList(methods)
+    return testMethods(testClass)
 }
 
 @Suppress("UnusedReceiverParameter")

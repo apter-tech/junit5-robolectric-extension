@@ -53,6 +53,10 @@ internal class JUnit5RobolectricTestRunner(clazz: Class<*>, injector: Injector =
 
     override fun computeTestMethods() = computeJUnit5TestMethods()
 
+    override fun validateNoNonStaticInnerClass(errors: MutableList<Throwable>) {
+        // Skip validation
+    }
+
     override fun isIgnored(child: FrameworkMethod) = isJUnit5Ignored(child)
 
     override fun validatePublicVoidNoArgMethods(
@@ -67,6 +71,10 @@ internal class JUnit5RobolectricTestRunner(clazz: Class<*>, injector: Injector =
     private class HelperTestRunner(bootstrappedTestClass: Class<*>) :
         RobolectricTestRunner.HelperTestRunner(bootstrappedTestClass) {
         override fun computeTestMethods(): MutableList<FrameworkMethod> = computeJUnit5TestMethods()
+
+        override fun validateNoNonStaticInnerClass(errors: MutableList<Throwable>) {
+            // Skip validation
+        }
 
         override fun isIgnored(child: FrameworkMethod) = isJUnit5Ignored(child)
 
