@@ -30,6 +30,10 @@ class RobolectricExtension :
     private val beforeAllFired = AtomicBoolean(false)
     private val robolectricTestRunnerHelper by lazy { JUnit5RobolectricTestRunnerHelper() }
 
+    init {
+        logger.trace { "init" }
+    }
+
     override fun beforeAll(context: ExtensionContext) {
         logger.trace { "beforeAll ${context.requiredTestClass.name}" }
         robolectricTestRunnerHelper.createTestEnvironmentForClass(context.requiredTestClass)

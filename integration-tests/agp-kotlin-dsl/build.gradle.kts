@@ -27,9 +27,8 @@ android {
 }
 
 detekt {
-    version = libs.versions.detekt.get()
+    toolVersion = libs.versions.detekt.get()
     autoCorrect = true
-    config.setFrom(rootProject.layout.projectDirectory.file("config/detekt/detekt.yml").asFile)
 }
 
 kotlin {
