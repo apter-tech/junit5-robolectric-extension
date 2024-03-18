@@ -24,7 +24,7 @@ test {
 }
 
 detekt {
-    version libs.versions.detekt.get()
+    toolVersion = libs.versions.detekt.get()
     autoCorrect true
 }
 
@@ -46,6 +46,12 @@ dependencies {
     testImplementation(libs.kotlinTestJUnit5)
     testImplementation(libs.junit5JupiterParams)
     testRuntimeOnly(libs.junit5JupiterEngine)
+}
+
+tasks.register('dokkaJavadocJar', Jar) {
+    dependsOn dokkaJavadoc
+    archiveClassifier.set 'javadoc'
+    from javadoc.destinationDir
 }
 
 private void bashExecute(String command) {
@@ -85,3 +91,5 @@ tasks.register('generateAndroidR') {
         bashExecute(aaptCommand)
     }
 }
+
+apply from: "${rootProject.layout.projectDirectory.file('gradle/publishing.gradle')}"

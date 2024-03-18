@@ -1,0 +1,64 @@
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact(kotlinSourcesJar)
+            artifact(dokkaJavadocJar)
+
+            pom {
+                name = 'JUnit5 Robolectric Extension'
+                description = """This repository aims to bridge the gap between JUnit 5 and Robolectric, 
+                    |enabling developers to leverage the benefits of both frameworks 
+                    |for unit testing Android applications. While Robolectric currently lacks 
+                    |a dedicated JUnit 5 extension, this project proposes a community-driven solution to 
+                    |achieve seamless integration.""".stripMargin()
+                url = 'https://github.com/apter-tech/junit5-robolectric-extension'
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                organization {
+                    name = 'Apter Technologies Ltd.'
+                    url = 'https://apter.tech'
+                }
+                developers {
+                    developer {
+                        id = 'warnyul'
+                        name = 'Balázs Varga'
+                        email = 'balazs.varga@apter.tech'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com:apter-tech/junit5-robolectric-extension.git'
+                    developerConnection = 'scm:git:ssh://github.com:apter-tech/junit5-robolectric-extension.git'
+                    url = 'https://github.com/apter-tech/junit5-robolectric-extension'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            name = 'MavenCentral'
+            final releasesRepoUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2'
+            final snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots'
+            url = version.toString().endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
+            credentials {
+                username = System.getenv('JUNIT5_ROBOLECTRIC_EXTENSION_MAVEN_USERNAME')
+                password = System.getenv('JUNIT5_ROBOLECTRIC_EXTENSION_MAVEN_PASSWORD')
+            }
+        }
+    }
+}
+
+//signing {
+//    useInMemoryPgpKeys(
+//        System.getenv('JUNIT5_ROBOLECTRIC_EXTENSION_PGP_SIGNING_KEY'),
+//        System.getenv('JUNIT5_ROBOLECTRIC_EXTENSION_PGP_SIGNING_PASSWORD'),
+//    )
+//    sign(publishing.publications["mavenJava"])
+//}
