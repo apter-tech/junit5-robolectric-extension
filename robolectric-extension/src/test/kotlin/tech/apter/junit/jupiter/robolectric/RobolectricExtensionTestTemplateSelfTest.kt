@@ -15,7 +15,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 
-
 @ExtendWith(RobolectricExtension::class)
 class RobolectricExtensionTestTemplateSelfTest {
 
