@@ -1,0 +1,8 @@
+tech.apter.junit.jupiter.robolectric.internal.plugins.JUnit5ConfigConfigurer
+tech.apter.junit.jupiter.robolectric.internal.plugins.JUnit5ConscryptModeConfigurer
+tech.apter.junit.jupiter.robolectric.internal.plugins.JUnit5GetInstallerPackageNameModeConfigurer
+tech.apter.junit.jupiter.robolectric.internal.plugins.JUnit5GraphicsModeConfigurer
+tech.apter.junit.jupiter.robolectric.internal.plugins.JUnit5LazyApplicationConfigurer
+tech.apter.junit.jupiter.robolectric.internal.plugins.JUnit5LooperModeConfigurer
+tech.apter.junit.jupiter.robolectric.internal.plugins.JUnit5SQLiteModeConfigurer
+tech.apter.junit.jupiter.robolectric.internal.plugins.JUnit5TextLayoutModeConfigurer

@@ -2,7 +2,7 @@ package tech.apter.junit.jupiter.robolectric
 
 import android.app.Application
 import android.content.Context
-import androidx.test.core.app.ApplicationProvider
+import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
@@ -21,7 +21,7 @@ class RobolectricExtensionDynamicSelfTest {
             "Given a test extended with robolectric when call parameterized test then robolectric should be available [$parameter]",
         ) {
             testCallCount++
-            val application = assertDoesNotThrow { ApplicationProvider.getApplicationContext<Context>() }
+            val application = assertDoesNotThrow { getApplicationContext<Context>() }
             assertNotNull(application)
             assertIs<Application>(application, "application")
             assertContains(setOf(1, 2, 3), parameter)

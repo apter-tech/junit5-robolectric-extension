@@ -20,7 +20,23 @@ kotlin {
 
 test {
     useJUnitPlatform()
-    jvmArgs('-Djunit.platform.launcher.interceptors.enabled=true')
+    testLogging {
+        showStandardStreams = true
+        showExceptions = true
+        showCauses = true
+        showStackTraces = true
+    }
+    jvmArgs(
+        '--add-exports', 'java.base/jdk.internal.loader=ALL-UNNAMED',
+        '--add-opens', 'java.base/jdk.internal.loader=ALL-UNNAMED',
+    )
+    systemProperty 'junit.platform.launcher.interceptors.enabled', 'true'
+    systemProperty 'junit.jupiter.execution.parallel.enabled', 'true'
+    systemProperty 'junit.jupiter.execution.parallel.mode.default ', 'same_thread'
+    systemProperty 'junit.jupiter.execution.parallel.mode.classes.default', 'concurrent'
+    systemProperty 'java.util.logging.config.file',
+        "${projectDir}/src/test/resources/logging.properties"
+    systemProperty 'robolectric.usePreinstrumentedJars', 'true'
 }
 
 detekt {
@@ -37,9 +53,10 @@ dependencies {
     api(libs.junit5JupiterApi)
     implementation(libs.junit5PlatformLauncher)
     implementation(libs.guavaConstraint) {
-        because 'CVE-2023-2976 7.1 Transitive Files or Directories Accessible to External Parties vulnerability ' +
-                'with High severity found'
+        because 'CVE-2023-2976 7.1 Transitive Files or Directories Accessible to External Parties' +
+            ' vulnerability with High severity found'
     }
+    implementation(libs.kotlinReflect)
     testImplementation(libs.robolectricAndroidAll)
     testImplementation(libs.junit4)
     testImplementation(libs.androidxTestExtJunit)

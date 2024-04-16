@@ -1,6 +1,5 @@
 package tech.apter.junit.jupiter.robolectric
 
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.extension.AfterAllCallback
 import org.junit.jupiter.api.extension.AfterEachCallback
 import org.junit.jupiter.api.extension.BeforeAllCallback
@@ -9,15 +8,10 @@ import org.junit.jupiter.api.extension.DynamicTestInvocationContext
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.InvocationInterceptor
 import org.junit.jupiter.api.extension.ReflectiveInvocationContext
-import org.junit.platform.commons.util.ReflectionUtils
 import tech.apter.junit.jupiter.robolectric.internal.JUnit5RobolectricTestRunnerHelper
-import tech.apter.junit.jupiter.robolectric.internal.createLogger
-import tech.apter.junit.jupiter.robolectric.internal.runOnMainThread
-import tech.apter.junit.jupiter.robolectric.internal.runOnMainThreadWithRobolectric
-import tech.apter.junit.jupiter.robolectric.internal.runWithRobolectric
+import tech.apter.junit.jupiter.robolectric.internal.extensions.createLogger
 import java.lang.reflect.Method
-import java.lang.reflect.Modifier
-import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.jvm.optionals.getOrNull
 
 @Suppress("TooManyFunctions", "LibraryEntitiesShouldNotBePublic")
 class RobolectricExtension :
@@ -27,58 +21,34 @@ class RobolectricExtension :
     AfterEachCallback,
     AfterAllCallback {
     private inline val logger get() = createLogger()
-    private val beforeAllFired = AtomicBoolean(false)
-    private val robolectricTestRunnerHelper by lazy { JUnit5RobolectricTestRunnerHelper() }
 
     init {
         logger.trace { "init" }
     }
 
     override fun beforeAll(context: ExtensionContext) {
-        logger.trace { "beforeAll ${context.requiredTestClass.name}" }
-        robolectricTestRunnerHelper.createTestEnvironmentForClass(context.requiredTestClass)
+        logger.trace { "beforeAll ${context.requiredTestClass.simpleName}" }
     }
 
     override fun beforeEach(context: ExtensionContext) {
-        logger.trace { "beforeEach ${context.requiredTestClass.name}::${context.requiredTestMethod.name}" }
-        robolectricTestRunnerHelper.createTestEnvironmentForMethod(context.requiredTestMethod)
-        robolectricTestRunnerHelper.runOnMainThreadWithRobolectric {
-            if (!beforeAllFired.getAndSet(true)) {
-                invokeBeforeAllMethods(testClass = context.requiredTestClass)
-            }
-            beforeEach(context.requiredTestMethod)
+        logger.trace {
+            "beforeEach ${context.requiredTestClass.simpleName}::${context.requiredTestMethod.name}"
         }
-    }
-
-    private fun invokeBeforeAllMethods(testClass: Class<*>) {
-        val beforeAllMethods = testClass
-            .methods
-            .filter {
-                it.getAnnotation(BeforeAll::class.java) != null &&
-                    Modifier.isStatic(it.modifiers)
-            }
-
-        beforeAllMethods.forEach {
-            logger.trace { "invoke beforeAll ${it.name}" }
-
-            ReflectionUtils.invokeMethod(it, null)
-        }
+        val testRunnerHelper = testRunnerHelper(context.requiredTestClass)
+        testRunnerHelper.beforeEach(context.requiredTestMethod)
     }
 
     override fun afterEach(context: ExtensionContext) {
-        logger.trace { "afterEach ${context.requiredTestClass.name}::${context.requiredTestMethod.name}" }
-        robolectricTestRunnerHelper.runOnMainThread {
-            runWithRobolectric {
-                afterEach(context.requiredTestMethod)
-            }
-            afterEachFinally()
+        logger.trace {
+            "afterEach ${context.requiredTestClass.simpleName}::${context.requiredTestMethod.name}"
         }
+        val testRunnerHelper = testRunnerHelper(context.requiredTestClass)
+        testRunnerHelper.afterEach(context.requiredTestMethod)
     }
 
     override fun afterAll(context: ExtensionContext) {
-        logger.trace { "afterAll ${context.requiredTestClass.name}" }
-        robolectricTestRunnerHelper.clearCachedRobolectricTestRunnerEnvironment()
-        beforeAllFired.set(false)
+        logger.trace { "afterAll ${context.requiredTestClass.simpleName}" }
+        testRunnerHelper(context.requiredTestClass).clearCachedRobolectricTestRunnerEnvironment()
     }
 
     override fun interceptBeforeAllMethod(
@@ -86,8 +56,11 @@ class RobolectricExtension :
         invocationContext: ReflectiveInvocationContext<Method>,
         extensionContext: ExtensionContext,
     ) {
-        logger.trace { "interceptBeforeAllMethod ${extensionContext.requiredTestClass}" }
-        invocation.skip()
+        logger.trace { "interceptBeforeAllMethod ${extensionContext.requiredTestClass.simpleName}" }
+        testRunnerHelper(extensionContext.requiredTestClass).proceedInvocation(
+            null,
+            invocation,
+        )
     }
 
     override fun interceptBeforeEachMethod(
@@ -96,11 +69,13 @@ class RobolectricExtension :
         extensionContext: ExtensionContext,
     ) {
         logger.trace {
-            "interceptBeforeEachMethod ${extensionContext.requiredTestClass}::${extensionContext.requiredTestMethod}"
+            "interceptBeforeEachMethod ${extensionContext.requiredTestClass.simpleName}" +
+                "::${extensionContext.requiredTestMethod.name}"
         }
-        robolectricTestRunnerHelper.runOnMainThreadWithRobolectric {
-            super.interceptBeforeEachMethod(invocation, invocationContext, extensionContext)
-        }
+        testRunnerHelper(extensionContext.requiredTestClass).proceedInvocation(
+            extensionContext.requiredTestMethod,
+            invocation,
+        )
     }
 
     override fun interceptDynamicTest(
@@ -108,10 +83,9 @@ class RobolectricExtension :
         invocationContext: DynamicTestInvocationContext,
         extensionContext: ExtensionContext,
     ) {
-        logger.trace { "interceptDynamicTest ${extensionContext.displayName}" }
-        robolectricTestRunnerHelper.runOnMainThreadWithRobolectric {
-            super.interceptDynamicTest(invocation, invocationContext, extensionContext)
-        }
+        val parent = checkNotNull(extensionContext.parent.getOrNull()) { "ExtensionContext's parent must be not null" }
+        logger.trace { "interceptDynamicTest ${parent.requiredTestClass} ${extensionContext.displayName}" }
+        testRunnerHelper(parent.requiredTestClass).proceedInvocation(parent.requiredTestMethod, invocation)
     }
 
     override fun interceptTestMethod(
@@ -120,11 +94,13 @@ class RobolectricExtension :
         extensionContext: ExtensionContext,
     ) {
         logger.trace {
-            "interceptTestMethod ${extensionContext.requiredTestClass}::${extensionContext.requiredTestMethod}"
+            "interceptTestMethod ${extensionContext.requiredTestClass.simpleName}" +
+                "::${extensionContext.requiredTestMethod.name}"
         }
-        robolectricTestRunnerHelper.runOnMainThreadWithRobolectric {
-            super.interceptTestMethod(invocation, invocationContext, extensionContext)
-        }
+        testRunnerHelper(extensionContext.requiredTestClass).proceedInvocation(
+            extensionContext.requiredTestMethod,
+            invocation,
+        )
     }
 
     override fun interceptTestTemplateMethod(
@@ -133,11 +109,13 @@ class RobolectricExtension :
         extensionContext: ExtensionContext,
     ) {
         logger.trace {
-            "interceptTestTemplateMethod ${extensionContext.requiredTestClass}::${extensionContext.requiredTestMethod}"
+            "interceptTestTemplateMethod ${extensionContext.requiredTestClass.simpleName}" +
+                "::${extensionContext.requiredTestMethod.name}"
         }
-        robolectricTestRunnerHelper.runOnMainThreadWithRobolectric {
-            super.interceptTestTemplateMethod(invocation, invocationContext, extensionContext)
-        }
+        testRunnerHelper(extensionContext.requiredTestClass).proceedInvocation(
+            extensionContext.requiredTestMethod,
+            invocation,
+        )
     }
 
     override fun interceptAfterEachMethod(
@@ -146,11 +124,13 @@ class RobolectricExtension :
         extensionContext: ExtensionContext,
     ) {
         logger.trace {
-            "interceptAfterEachMethod ${extensionContext.requiredTestClass}::${extensionContext.requiredTestMethod}"
+            "interceptAfterEachMethod ${extensionContext.requiredTestClass.simpleName}" +
+                "::${extensionContext.requiredTestMethod.name}"
         }
-        robolectricTestRunnerHelper.runOnMainThreadWithRobolectric {
-            super.interceptAfterEachMethod(invocation, invocationContext, extensionContext)
-        }
+        testRunnerHelper(extensionContext.requiredTestClass).proceedInvocation(
+            extensionContext.requiredTestMethod,
+            invocation,
+        )
     }
 
     override fun interceptAfterAllMethod(
@@ -158,9 +138,13 @@ class RobolectricExtension :
         invocationContext: ReflectiveInvocationContext<Method>,
         extensionContext: ExtensionContext,
     ) {
-        logger.trace { "interceptAfterAllMethod ${extensionContext.requiredTestClass}" }
-        robolectricTestRunnerHelper.runOnMainThreadWithRobolectric {
-            super.interceptAfterAllMethod(invocation, invocationContext, extensionContext)
-        }
+        logger.trace { "interceptAfterAllMethod ${extensionContext.requiredTestClass.simpleName}" }
+        testRunnerHelper(extensionContext.requiredTestClass).proceedInvocation(
+            null,
+            invocation,
+        )
     }
+
+    @Suppress("NOTHING_TO_INLINE")
+    private inline fun testRunnerHelper(testClass: Class<*>) = JUnit5RobolectricTestRunnerHelper.getInstance(testClass)
 }

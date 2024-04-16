@@ -23,6 +23,7 @@ class RobolectricExtensionClassLoaderSelfTest {
     }
 
     @AfterTest
+    @Throws(Exception::class)
     fun tearDown() {
         assertEquals<Class<*>>(SdkSandboxClassLoader::class.java, currentClassLoader.javaClass)
     }

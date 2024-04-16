@@ -6,7 +6,8 @@ import org.robolectric.internal.AndroidSandbox
 import org.robolectric.internal.ResourcesMode
 import org.robolectric.internal.bytecode.ShadowProviders
 import org.robolectric.pluginapi.Sdk
-import java.util.concurrent.Callable
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ThreadFactory
 
 @Suppress("LongParameterList")
 internal class JUnit5RobolectricAndroidSandbox(
@@ -28,6 +29,16 @@ internal class JUnit5RobolectricAndroidSandbox(
     shadowProviders,
     sqLiteMode,
 ) {
-    override fun <T : Any?> runOnMainThread(callable: Callable<T>): T =
-        AndroidMainThreadExecutor.execute(callable)
+    override fun mainThreadFactory(): ThreadFactory {
+        return ThreadFactory { r: Runnable? ->
+            val name = "SDK-${sdk.apiLevel}"
+            Thread(ThreadGroup(name), r, "$name-Main-Thread-${sdk.createThreadId()}")
+        }
+    }
+
+    private companion object {
+        private val threadIds = ConcurrentHashMap<String, Int>()
+        private fun Sdk.createThreadId(): Int = threadIds.getOrPut("$apiLevel") { 1 }
+            .also { threadIds["$apiLevel"] = it + 1 }
+    }
 }

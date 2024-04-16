@@ -31,6 +31,7 @@ junit5JupiterEngine = { module = "org.junit.jupiter:junit-jupiter-engine", versi
 junit5JupiterParams = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "sources" }
 junit5PlatformLauncher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "sources" }
 kotlinTestJUnit5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5", version.ref = "kotlin" }
+kotlinReflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 robolectricAndroidAll = { module = "org.robolectric:android-all", version.ref = "robolectricAndroidAll" }
 

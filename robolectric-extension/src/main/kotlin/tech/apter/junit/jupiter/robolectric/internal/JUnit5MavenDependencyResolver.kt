@@ -1,0 +1,86 @@
+package tech.apter.junit.jupiter.robolectric.internal
+
+import org.robolectric.MavenRoboSettings
+import org.robolectric.internal.dependency.DependencyJar
+import org.robolectric.internal.dependency.MavenArtifactFetcher
+import org.robolectric.internal.dependency.MavenDependencyResolver
+import org.robolectric.internal.dependency.MavenJarArtifact
+import java.io.File
+import java.io.IOException
+import java.io.RandomAccessFile
+import java.net.MalformedURLException
+import java.net.URL
+import java.util.concurrent.ExecutorService
+
+internal class JUnit5MavenDependencyResolver(
+    repositoryUrl: String,
+    repositoryId: String,
+    repositoryUserName: String,
+    repositoryPassword: String,
+    proxyHost: String,
+    proxyPort: Int,
+) : MavenDependencyResolver(repositoryUrl, repositoryId, repositoryUserName, repositoryPassword, proxyHost, proxyPort) {
+    constructor() : this(
+        MavenRoboSettings.getMavenRepositoryUrl(),
+        MavenRoboSettings.getMavenRepositoryId(),
+        MavenRoboSettings.getMavenRepositoryUserName(),
+        MavenRoboSettings.getMavenRepositoryPassword(),
+        MavenRoboSettings.getMavenProxyHost(),
+        MavenRoboSettings.getMavenProxyPort(),
+    )
+
+    private val executorService: ExecutorService = createExecutorService()
+    private val mavenArtifactFetcher: MavenArtifactFetcher = createMavenFetcher(
+        repositoryUrl,
+        repositoryUserName,
+        repositoryPassword,
+        proxyHost,
+        proxyPort,
+        localRepositoryDir,
+        executorService,
+    )
+
+    override fun getLocalArtifactUrls(vararg dependencies: DependencyJar): Array<URL?> {
+        val artifacts: MutableList<MavenJarArtifact> = ArrayList(dependencies.size)
+
+        for (dependencyJar in dependencies) {
+            whileLocked(dependencyJar) {
+                val artifact = MavenJarArtifact(dependencyJar)
+                artifacts.add(artifact)
+                mavenArtifactFetcher.fetchArtifact(artifact)
+            }
+        }
+        val urls = arrayOfNulls<URL>(dependencies.size)
+        try {
+            for (i in artifacts.indices) {
+                val artifact = artifacts[i]
+                urls[i] = File(localRepositoryDir, artifact.jarPath()).toURI().toURL()
+            }
+        } catch (e: MalformedURLException) {
+            throw AssertionError(e)
+        }
+        return urls
+    }
+
+    private fun createLockFile(dependencyJar: DependencyJar): File {
+        return File(System.getProperty("user.home"), "${dependencyJar.shortName}.lock")
+    }
+
+    @Suppress("NestedBlockDepth")
+    private fun whileLocked(dependencyJar: DependencyJar, runnable: Runnable) {
+        val lockFile = createLockFile(dependencyJar)
+        try {
+            RandomAccessFile(lockFile, "rw").use { raf ->
+                raf.channel.use { channel ->
+                    channel.lock().use {
+                        runnable.run()
+                    }
+                }
+            }
+        } catch (e: IOException) {
+            throw IllegalStateException("Couldn't create lock file $lockFile", e)
+        } finally {
+            lockFile.delete()
+        }
+    }
+}

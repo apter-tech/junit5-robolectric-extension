@@ -20,7 +20,13 @@ android {
             isIncludeAndroidResources = true
             all { test ->
                 test.useJUnitPlatform()
-                test.jvmArgs(listOf("-Djunit.platform.launcher.interceptors.enabled=true"))
+                test.jvmArgs(
+                    listOf(
+                        "--add-exports", "java.base/jdk.internal.loader=ALL-UNNAMED",
+                        "--add-opens", "java.base/jdk.internal.loader=ALL-UNNAMED",
+                        "-Djunit.platform.launcher.interceptors.enabled=true"
+                    )
+                )
             }
         }
     }
