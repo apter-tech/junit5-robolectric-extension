@@ -48,12 +48,6 @@ dependencies {
     testRuntimeOnly(libs.junit5JupiterEngine)
 }
 
-tasks.register('dokkaJavadocJar', Jar) {
-    dependsOn dokkaJavadoc
-    archiveClassifier.set 'javadoc'
-    from javadoc.destinationDir
-}
-
 private void bashExecute(String command) {
     final process = command.execute()
     final error = process.errorReader().readLines().join("\n")

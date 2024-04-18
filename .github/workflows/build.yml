@@ -23,7 +23,12 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
       - name: Build with Gradle Wrapper
-        run: ./gradlew build koverXmlReport publishToMavenLocal
+        run: ./gradlew build koverXmlReport publish
+        env:
+          JUNIT5_ROBOLECTRIC_EXTENSION_MAVEN_USERNAME: '${{ secrets.JUNIT5_ROBOLECTRIC_EXTENSION_MAVEN_USERNAME }}'
+          JUNIT5_ROBOLECTRIC_EXTENSION_MAVEN_PASSWORD: '${{ secrets.JUNIT5_ROBOLECTRIC_EXTENSION_MAVEN_PASSWORD }}'
+          JUNIT5_ROBOLECTRIC_EXTENSION_GPG_SIGNING_KEY: '${{ secrets.JUNIT5_ROBOLECTRIC_EXTENSION_GPG_SIGNING_KEY }}'
+          JUNIT5_ROBOLECTRIC_EXTENSION_GPG_SIGNING_PASSWORD: '${{ secrets.JUNIT5_ROBOLECTRIC_EXTENSION_GPG_SIGNING_PASSWORD }}'
       - name: Upload coverage report
         uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
         if: ${{ hashFiles('build/reports/kover/report.xml') != '' }}
