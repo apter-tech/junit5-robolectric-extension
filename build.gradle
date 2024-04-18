@@ -4,7 +4,7 @@ plugins {
 
 allprojects {
     group = 'tech.apter.junit5.jupiter'
-    version = property('apter.junit5.robolectric.extension.version')
+    version = property('tech.apter.junit5.robolectric.extension.version')
 }
 
 dependencies {

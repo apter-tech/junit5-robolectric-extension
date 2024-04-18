@@ -1,6 +1,12 @@
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
+tasks.register('dokkaJavadocJar', Jar) {
+    dependsOn dokkaJavadoc
+    archiveClassifier.set 'javadoc'
+    from javadoc.destinationDir
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -44,8 +50,8 @@ publishing {
     repositories {
         maven {
             name = 'MavenCentral'
-            final releasesRepoUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2'
-            final snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots'
+            final releasesRepoUrl = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2'
+            final snapshotsRepoUrl = 'https://s01.oss.sonatype.org/content/repositories/snapshots'
             url = version.toString().endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
             credentials {
                 username = System.getenv('JUNIT5_ROBOLECTRIC_EXTENSION_MAVEN_USERNAME')
@@ -55,10 +61,19 @@ publishing {
     }
 }
 
-//signing {
-//    useInMemoryPgpKeys(
-//        System.getenv('JUNIT5_ROBOLECTRIC_EXTENSION_PGP_SIGNING_KEY'),
-//        System.getenv('JUNIT5_ROBOLECTRIC_EXTENSION_PGP_SIGNING_PASSWORD'),
-//    )
-//    sign(publishing.publications["mavenJava"])
-//}
+final JUNIT5_ROBOLECTRIC_EXTENSION_GPG_SIGNING_KEY = System.getenv(
+    'JUNIT5_ROBOLECTRIC_EXTENSION_GPG_SIGNING_KEY'
+) ?: ""
+final JUNIT5_ROBOLECTRIC_EXTENSION_GPG_SIGNING_PASSWORD = System.getenv(
+    'JUNIT5_ROBOLECTRIC_EXTENSION_GPG_SIGNING_PASSWORD'
+) ?: ""
+
+if (!JUNIT5_ROBOLECTRIC_EXTENSION_GPG_SIGNING_KEY.isEmpty() && !JUNIT5_ROBOLECTRIC_EXTENSION_GPG_SIGNING_PASSWORD.isEmpty()) {
+    signing {
+        useInMemoryPgpKeys(
+            JUNIT5_ROBOLECTRIC_EXTENSION_GPG_SIGNING_KEY,
+            JUNIT5_ROBOLECTRIC_EXTENSION_GPG_SIGNING_PASSWORD,
+        )
+        sign(publishing.publications["mavenJava"])
+    }
+}
