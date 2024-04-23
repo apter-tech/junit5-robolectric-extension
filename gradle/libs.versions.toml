@@ -1,7 +1,7 @@
 [versions]
 androidBuildTools = "34.0.0"
 androidCompileSdk = "34"
-androidGradle = "8.3.1"
+androidGradle = "8.3.2"
 androidMinimumSdk = "14"
 androidxTestExtJunit = "1.1.5"
 detekt = "1.23.6"
@@ -12,7 +12,7 @@ junit5 = "5.10.2"
 jvmToolchain = "17"
 kotlin = "1.9.23"
 kover = "0.7.6"
-robolectric = "4.12"
+robolectric = "4.12.1"
 robolectricAndroidAll = "14-robolectric-10818077"
 # Use when bom also added to the dependencies
 sources = "sources"
