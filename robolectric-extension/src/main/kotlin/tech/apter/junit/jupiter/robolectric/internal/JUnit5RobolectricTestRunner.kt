@@ -13,7 +13,12 @@ import org.robolectric.util.inject.Injector
 import tech.apter.junit.jupiter.robolectric.RobolectricExtension
 import tech.apter.junit.jupiter.robolectric.internal.extensions.createLogger
 import tech.apter.junit.jupiter.robolectric.internal.extensions.hasTheSameParameterTypes
+import tech.apter.junit.jupiter.robolectric.internal.extensions.mostOuterDeclaringClass
 import java.lang.reflect.Method
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.locks.Lock
+import java.util.concurrent.locks.ReentrantReadWriteLock
+import kotlin.concurrent.withLock
 
 internal data class TestClassContainer(val testClass: Class<*>)
 
@@ -58,11 +63,15 @@ internal class JUnit5RobolectricTestRunner(
         frameworkMethod: FrameworkMethod,
         bootstrappedMethod: Method,
     ) {
-        synchronized(beforeTestLock) {
+        beforeTestLock().withLock {
             logger.trace { "runBeforeTest ${bootstrappedMethod.declaringClass.simpleName}::${bootstrappedMethod.name}" }
             super.beforeTest(sdkEnvironment, frameworkMethod, bootstrappedMethod)
         }
     }
+
+    private fun beforeTestLock(): Lock = beforeTestLocks.getOrPut(testClass.javaClass.mostOuterDeclaringClass().name) {
+        ReentrantReadWriteLock()
+    }.writeLock()
 
     fun runAfterTest(frameworkMethod: FrameworkMethod, bootstrappedMethod: Method) {
         logger.trace { "runAfterTest ${frameworkMethod.declaringClass.simpleName}::${frameworkMethod.name}" }
@@ -115,7 +124,7 @@ internal class JUnit5RobolectricTestRunner(
     }
 
     private companion object {
-        private val beforeTestLock = Any()
+        private val beforeTestLocks = ConcurrentHashMap<String, ReentrantReadWriteLock>()
 
         private fun defaultInjectorBuilder() =
             defaultInjector().bind(SandboxBuilder::class.java, JUnit5RobolectricSandboxBuilder::class.java)
