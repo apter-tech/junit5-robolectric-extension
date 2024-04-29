@@ -1,0 +1,37 @@
+final void setupPom(final MavenPublication publication, final String publicationName) {
+    publication.pom { pom ->
+        name = publicationName
+        description = """This repository aims to bridge the gap between JUnit 5 and Robolectric, 
+                    |enabling developers to leverage the benefits of both frameworks 
+                    |for unit testing Android applications. While Robolectric currently lacks 
+                    |a dedicated JUnit 5 extension, this project proposes a community-driven solution to 
+                    |achieve seamless integration.""".stripMargin()
+        url = 'https://github.com/apter-tech/junit5-robolectric-extension'
+        licenses {
+            license {
+                name = 'The Apache License, Version 2.0'
+                url = 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+            }
+        }
+        organization {
+            name = 'Apter Technologies Ltd.'
+            url = 'https://apter.tech'
+        }
+        developers {
+            developer {
+                id = 'warnyul'
+                name = 'Balázs Varga'
+                email = 'balazs.varga@apter.tech'
+            }
+        }
+        scm {
+            connection = 'scm:git:git://github.com:apter-tech/junit5-robolectric-extension.git'
+            developerConnection = 'scm:git:ssh://github.com:apter-tech/junit5-robolectric-extension.git'
+            url = 'https://github.com/apter-tech/junit5-robolectric-extension'
+        }
+    }
+}
+
+ext {
+    setupPom = this.&setupPom
+}

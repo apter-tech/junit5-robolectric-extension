@@ -1,9 +1,19 @@
+import tech.apter.robolectric.junit.jupiter.gradle.plugin.RobolectricJUnitJupiterGradlePlugin
+
+buildscript {
+    dependencies {
+        classpath("tech.apter.junit5.jupiter:robolectric-extension-gradle-plugin:$version")
+    }
+}
+
 plugins {
     id("com.android.library")
     alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.kotlinxKover)
     alias(libs.plugins.detekt)
 }
+
+apply(mapOf("plugin" to RobolectricJUnitJupiterGradlePlugin::class.java))
 
 android {
     namespace = "tech.apter.junit.jupiter.robolectric.integration.tests.agp.kotlin.dsl"
@@ -12,23 +22,6 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.androidMinimumSdk.get().toInt()
-    }
-
-    @Suppress("UnstableApiUsage")
-    testOptions {
-        unitTests {
-            isIncludeAndroidResources = true
-            all { test ->
-                test.useJUnitPlatform()
-                test.jvmArgs(
-                    listOf(
-                        "--add-exports", "java.base/jdk.internal.loader=ALL-UNNAMED",
-                        "--add-opens", "java.base/jdk.internal.loader=ALL-UNNAMED",
-                        "-Djunit.platform.launcher.interceptors.enabled=true"
-                    )
-                )
-            }
-        }
     }
 }
 
@@ -44,8 +37,4 @@ kotlin {
 dependencies {
     detektPlugins(libs.detektFormatting)
     detektPlugins(libs.detektRulesLibraries)
-    testImplementation(project(":robolectric-extension"))
-    testImplementation(libs.robolectric)
-    testImplementation(libs.junit5JupiterApi)
-    testRuntimeOnly(libs.junit5JupiterEngine)
 }

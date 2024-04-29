@@ -21,14 +21,25 @@ in-memory environment.
 
 ## Installation
 
-1. Add the Maven Central repository to your project's `build.gradle`:
+1. Add the Gradle Plugin Portal and Maven Central and Google's Maven repository to your project's `settings.gradle` file:
 
 <details open>
 <summary>Kotlin</summary>
 
 ```kotlin
-repositories {
-    mavenCentral()
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+        google()
+    }
+}
+
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+        google()
+    }
 }
 ```
 
@@ -38,8 +49,19 @@ repositories {
 <summary>Groovy</summary>
 
 ```groovy
-repositories {
-    mavenCentral()
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+        google()
+    }
+}
+
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+        google()
+    }
 }
 ```
 
@@ -52,30 +74,8 @@ repositories {
 <summary>Kotlin</summary>
 
 ```kotlin
-android {
-    testOptions {
-        unitTests {
-            isIncludeAndroidResources = true
-            all { test ->
-                test.useJUnitPlatform()
-                test.jvmArgs(
-                    listOf(
-                        "-Djunit.platform.launcher.interceptors.enabled=true",
-                        "--add-exports", "java.base/jdk.internal.loader=ALL-UNNAMED",
-                        "--add-opens", "java.base/jdk.internal.loader=ALL-UNNAMED",
-                    )
-                )
-            }
-        }
-    }
-}
-
-dependencies {
-    testImplementation("tech.apter.junit.jupiter:robolectric-extension:<latest.release>")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:<latest.release>") // JUnit 5 Jupiter Engine
-    // Optional dependencies if you want to use different version than used by the extension
-    testImplementation("org.junit.jupiter:junit-jupiter-api:<latest.release>") // Latest JUnit 5 Jupiter API
-    testImplementation("org.robolectric:robolectric:<latest.release>") // Latest Robolectric version
+plugins {
+    id("tech.apter.junit5.jupiter.robolectric-extension-gradle-plugin")
 }
 ```
 
@@ -85,29 +85,8 @@ dependencies {
 <summary>Groovy</summary>
 
 ```groovy
-android {
-    testOptions {
-        unitTests {
-            includeAndroidResources = true
-            all {
-                useJUnitPlatform()
-                jvmArgs(
-                    '-Djunit.platform.launcher.interceptors.enabled=true',
-                    '--add-exports', 'java.base/jdk.internal.loader=ALL-UNNAMED',
-                    '--add-opens', 'java.base/jdk.internal.loader=ALL-UNNAMED',
-                )
-            }
-        }
-    }
-}
-
-dependencies {
-    testImplementation 'tech.apter.junit.jupiter:robolectric-extension:<latest.release>'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:<latest.release>'
-    // Latest JUnit 5 Jupiter Engine
-    // Optional dependencies if you want to use different versions than used by the extension
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:<latest.release>' // Latest JUnit 5 Jupiter API
-    testImplementation 'org.robolectric:robolectric:<latest.release>' // Latest Robolectric version
+plugins {
+    id 'tech.apter.junit5.jupiter.robolectric-extension-gradle-plugin'
 }
 ```
 
@@ -270,10 +249,5 @@ public class RobolectricExtensionSelfTest {
 
 ## Important Notes
 
-* Ensure `isIncludeAndroidResources` is set to true in your testOptions configuration to access
-  Android resources in your tests.
-* JUnit Platform Launcher Interceptors must be
-  enabled (`junit.platform.launcher.interceptors.enabled=true`), otherwise
-  test instances will not be created by Robolectric's classloader.
 * Parallel execution is currently not supported. Run tests sequentially for now.
 
