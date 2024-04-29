@@ -1,4 +1,4 @@
-# Junit5 Robolectric Extension (Experimental)
+# JUnit5 Robolectric Extension (Experimental)
 
 This is an experimental project that aims to bridge the gap between JUnit 5 and Robolectric,
 providing a way to run your
