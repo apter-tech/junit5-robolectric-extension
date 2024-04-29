@@ -19,7 +19,11 @@ android {
             includeAndroidResources = true
             all {
                 useJUnitPlatform()
-                jvmArgs('-Djunit.platform.launcher.interceptors.enabled=true')
+                jvmArgs(
+                    '--add-exports', 'java.base/jdk.internal.loader=ALL-UNNAMED',
+                    '--add-opens', 'java.base/jdk.internal.loader=ALL-UNNAMED',
+                    '-Djunit.platform.launcher.interceptors.enabled=true'
+                )
             }
         }
     }

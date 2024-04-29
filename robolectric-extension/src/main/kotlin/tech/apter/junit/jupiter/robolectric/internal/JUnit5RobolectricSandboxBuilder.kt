@@ -10,17 +10,20 @@ import org.robolectric.internal.bytecode.ClassInstrumentor
 import org.robolectric.internal.bytecode.InstrumentationConfiguration
 import org.robolectric.internal.bytecode.ShadowProviders
 import org.robolectric.pluginapi.Sdk
-import java.util.Collections
+import tech.apter.junit.jupiter.robolectric.internal.extensions.createLogger
+import tech.apter.junit.jupiter.robolectric.internal.extensions.mostOuterDeclaringClass
+import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 
 internal class JUnit5RobolectricSandboxBuilder @Inject constructor(
+    private val testClassContainer: TestClassContainer,
     private val apkLoader: ApkLoader,
     @Suppress("VisibleForTests")
     private val testEnvironmentSpec: AndroidSandbox.TestEnvironmentSpec,
     private val shadowProviders: ShadowProviders,
     private val classInstrumentor: ClassInstrumentor,
 ) : SandboxManager.SandboxBuilder {
-    private val logger get() = createLogger()
+    private inline val logger get() = createLogger()
 
     override fun build(
         instrumentationConfig: InstrumentationConfiguration,
@@ -29,8 +32,9 @@ internal class JUnit5RobolectricSandboxBuilder @Inject constructor(
         resourcesMode: ResourcesMode,
         sqLiteMode: SQLiteMode.Mode,
     ): AndroidSandbox {
-        logger.trace { "build" }
-        val sdkSandboxClassLoader = getOrCreateClassLoader(instrumentationConfig, runtimeSdk)
+        val testClass = testClassContainer.testClass
+        logger.trace { "build AndroidSandbox[$runtimeSdk] ${testClass.name.substringAfterLast('.')}" }
+        val sdkSandboxClassLoader = createClassLoader(testClass, instrumentationConfig, runtimeSdk)
         return JUnit5RobolectricAndroidSandbox(
             runtimeSdk,
             compileSdk,
@@ -43,24 +47,25 @@ internal class JUnit5RobolectricSandboxBuilder @Inject constructor(
         )
     }
 
-    private fun getOrCreateClassLoader(
+    private fun createClassLoader(
+        testClass: Class<*>,
         instrumentationConfig: InstrumentationConfiguration,
         runtimeSdk: Sdk,
     ): SdkSandboxClassLoader {
-        val key = Key(instrumentationConfig, runtimeSdk)
-        return classLoaderCache.getOrPut(key) {
-            logger.debug { "Create ${SdkSandboxClassLoader::class.simpleName} instance for $runtimeSdk." }
+        val mostOuterDeclaringClassName = testClass.mostOuterDeclaringClass().name
+        return classLoaderCache.getOrPut(mostOuterDeclaringClassName) {
+            logger.debug {
+                "Create ${SdkSandboxClassLoader::class.simpleName}[$runtimeSdk] instance for ${
+                    mostOuterDeclaringClassName.substringAfterLast(
+                        '.'
+                    )
+                }"
+            }
             SdkSandboxClassLoader(instrumentationConfig, runtimeSdk, classInstrumentor)
         }
     }
 
-    private data class Key(
-        private val configuration: InstrumentationConfiguration,
-        private val runtimeSdk: Sdk,
-    )
-
     private companion object {
-        @JvmStatic
-        private val classLoaderCache = Collections.synchronizedMap<Key, SdkSandboxClassLoader>(mutableMapOf())
+        private val classLoaderCache = ConcurrentHashMap<String, SdkSandboxClassLoader>()
     }
 }

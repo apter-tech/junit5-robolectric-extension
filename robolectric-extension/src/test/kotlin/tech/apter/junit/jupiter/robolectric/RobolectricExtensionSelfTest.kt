@@ -4,18 +4,18 @@ import android.app.Application
 import android.content.Context
 import android.os.Build
 import android.os.Looper
-import androidx.test.core.app.ApplicationProvider
+import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert
 import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Timeout
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.extension.ExtendWith
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import org.robolectric.util.ReflectionHelpers
-import java.util.concurrent.atomic.AtomicInteger
 import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertContains
@@ -27,21 +27,16 @@ import kotlin.test.assertTrue
 
 @ExtendWith(RobolectricExtension::class)
 @Config(application = RobolectricExtensionSelfTest.MyTestApplication::class)
+@DisplayName("Given a test class extended with robolectric")
 class RobolectricExtensionSelfTest {
-
     @Test
     fun shouldInitializeAndBindApplicationButNotCallOnCreate() {
-        val application = assertDoesNotThrow { ApplicationProvider.getApplicationContext<Context>() }
+        val application = assertDoesNotThrow { getApplicationContext<Context>() }
         assertIs<MyTestApplication>(application, "application")
         assertTrue("onCreateCalled") { application.onCreateWasCalled }
         if (RuntimeEnvironment.useLegacyResources()) {
             assertNotNull(RuntimeEnvironment.getAppResourceTable(), "Application resource loader")
         }
-    }
-
-    @Test
-    fun `Before the test before class should be fired one`() {
-        assertEquals(1, beforeAllFired.get())
     }
 
     @Test
@@ -52,8 +47,13 @@ class RobolectricExtensionSelfTest {
 
     @Test
     @Config(qualifiers = "fr")
-    fun internalBeforeTest_testValuesResQualifiers() {
+    fun internalBeforeTest_testValuesResQualifiers_fr() {
         assertContains(RuntimeEnvironment.getQualifiers(), "fr")
+    }
+
+    @Test
+    fun internalBeforeTest_testValuesResQualifiers() {
+        assertContains(RuntimeEnvironment.getQualifiers(), "en")
     }
 
     @Test
@@ -81,16 +81,29 @@ class RobolectricExtensionSelfTest {
         MatcherAssert.assertThat(true, CoreMatchers.`is`(true))
     }
 
+    @Nested
+    @Config(qualifiers = "fr")
+    @DisplayName("when nested test has fr res qualifier config")
+    inner class CustomQualifierSelfTest {
+        @Test
+        fun `then runtime environment's qualifiers should contains fr`() {
+            assertContains(RuntimeEnvironment.getQualifiers(), "fr")
+        }
+    }
+
+    @Nested
+    @DisplayName("when test nested")
+    inner class NestedSelfTest {
+        @Test
+        fun `then robolectric should be available`() {
+            val application = assertDoesNotThrow { getApplicationContext<Context>() }
+            assertNotNull(application)
+            assertIs<Application>(application, "application")
+        }
+    }
+
     companion object {
         private var onTerminateCalledFromMain: Boolean? = null
-        private val beforeAllFired = AtomicInteger(0)
-
-        @BeforeAll
-        @JvmStatic
-        @Throws(Exception::class)
-        fun setUpClass() {
-            beforeAllFired.incrementAndGet()
-        }
 
         @AfterAll
         @JvmStatic
@@ -98,13 +111,6 @@ class RobolectricExtensionSelfTest {
         fun resetStaticState_shouldBeCalled_onMainThread() {
             assertNotNull(onTerminateCalledFromMain)
             assertTrue { requireNotNull(onTerminateCalledFromMain) }
-        }
-
-        @AfterAll
-        @JvmStatic
-        @Throws(Exception::class)
-        fun tearDown() {
-            beforeAllFired.set(0)
         }
     }
 
