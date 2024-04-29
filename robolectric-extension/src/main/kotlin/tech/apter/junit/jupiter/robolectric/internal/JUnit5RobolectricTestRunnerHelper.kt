@@ -8,6 +8,8 @@ import jdk.internal.loader.URLClassPath
 import org.junit.jupiter.api.extension.InvocationInterceptor
 import org.junit.runners.model.FrameworkMethod
 import org.robolectric.annotation.Config
+import org.robolectric.annotation.GraphicsMode
+import org.robolectric.annotation.LooperMode
 import org.robolectric.internal.bytecode.Sandbox
 import tech.apter.junit.jupiter.robolectric.RobolectricExtension
 import tech.apter.junit.jupiter.robolectric.internal.extensions.createLogger
@@ -25,6 +27,11 @@ internal class JUnit5RobolectricTestRunnerHelper(testClass: Class<*>) {
 
     init {
         validateNestedTestClassCanNotOverrideRuntimeSdk(testClass)
+        validateNestedTestClassCanNotApplyAnnotations(
+            testClass,
+            LooperMode::class.java,
+            GraphicsMode::class.java,
+        )
         createTestEnvironmentForClass(testClass)
     }
 
@@ -44,6 +51,18 @@ internal class JUnit5RobolectricTestRunnerHelper(testClass: Class<*>) {
         val config = testClass.getAnnotation(Config::class.java)
         if (testClass.isNestedTest && config != null && config.sdk.isNotEmpty()) {
             error("Robolectric runtime sdk cannot be overwritten on a nested test class: ${testClass.name}")
+        }
+    }
+
+    private fun validateNestedTestClassCanNotApplyAnnotations(
+        testClass: Class<*>,
+        vararg annotationsClasses: Class<out Annotation>,
+    ) {
+        annotationsClasses.forEach { annotationClass ->
+            val annotation = testClass.getAnnotation(annotationClass)
+            if (annotation != null) {
+                error("")
+            }
         }
     }
 
