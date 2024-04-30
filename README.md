@@ -14,14 +14,16 @@ in-memory environment.
 * **Parallel Execution:** Parallel test execution is not yet supported. We're actively working on
   addressing this limitation in future releases.
 * **Configuration:**
-  * Robolectric `@Config`'s sdk parameter annotation can only be set on most outer test class.
-  * `@ResourcesMode`, `@LooperMode`, `GraphicsMode` annotations can only be set on most outer test class.
+    * Robolectric `@Config`'s sdk parameter annotation can only be set on most outer test class.
+    * `@ResourcesMode`, `@LooperMode`, `GraphicsMode` annotations can only be set on most outer test
+      class.
 * **Experimental Status:** This extension is still under development, and its API might change in
   future versions.
 
 ## Installation
 
-1. Add the Gradle Plugin Portal and Maven Central and Google's Maven repository to your project's `settings.gradle` file:
+1. Add the Gradle Plugin Portal and Maven Central and Google's Maven repository to your project'
+   s `settings.gradle` file:
 
 <details open>
 <summary>Kotlin</summary>
@@ -75,7 +77,7 @@ dependencyResolutionManagement {
 
 ```kotlin
 plugins {
-    id("tech.apter.junit5.jupiter.robolectric-extension-gradle-plugin")
+    id("tech.apter.junit5.jupiter.robolectric-extension-gradle-plugin") version ("<latest.release>")
 }
 ```
 
@@ -86,7 +88,7 @@ plugins {
 
 ```groovy
 plugins {
-    id 'tech.apter.junit5.jupiter.robolectric-extension-gradle-plugin'
+    id 'tech.apter.junit5.jupiter.robolectric-extension-gradle-plugin' version '<latest.release>'
 }
 ```
 
@@ -116,8 +118,8 @@ plugins {
 </details>
 
 2. Utilize the standard JUnit 5 annotations (`@Test`, `@BeforeEach`, `@AfterEach`, etc.) within your
-   test methods. You
-   could also use `org.jetbrains.kotlin:kotlin-test-junit5` package if you want to.
+   test methods. You could also use `org.jetbrains.kotlin:kotlin-test-junit5` package if you want
+   to.
 
 <details open>
 <summary>Kotlin</summary>
