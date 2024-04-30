@@ -1,13 +1,22 @@
 import org.robolectric.gradle.AarDepsPlugin
+import tech.apter.robolectric.junit.jupiter.gradle.plugin.RobolectricJUnitJupiterGradlePlugin
+
+buildscript {
+    dependencies {
+        classpath("tech.apter.junit5.jupiter:robolectric-extension-gradle-plugin:$version")
+    }
+}
 
 plugins {
     alias(libs.plugins.kotlinJvm)
     alias(libs.plugins.kotlinxKover)
     alias(libs.plugins.detekt)
     alias(libs.plugins.dokka)
+    id('maven-publish')
 }
 
 apply plugin: AarDepsPlugin
+apply plugin: RobolectricJUnitJupiterGradlePlugin
 
 configurations.configureEach { configuration ->
     configuration.exclude(group: 'androidx.tracing', module: 'tracing')
@@ -18,19 +27,17 @@ kotlin {
     jvmToolchain(libs.versions.jvmToolchain.get().toInteger())
 }
 
+robolectricJUnitJupiter {
+    doNotAddDependencies = true
+}
+
 test {
-    useJUnitPlatform()
     testLogging {
         showStandardStreams = true
         showExceptions = true
         showCauses = true
         showStackTraces = true
     }
-    jvmArgs(
-        '--add-exports', 'java.base/jdk.internal.loader=ALL-UNNAMED',
-        '--add-opens', 'java.base/jdk.internal.loader=ALL-UNNAMED',
-    )
-    systemProperty 'junit.platform.launcher.interceptors.enabled', 'true'
     systemProperty 'junit.jupiter.execution.parallel.enabled', 'true'
     systemProperty 'junit.jupiter.execution.parallel.mode.default ', 'same_thread'
     systemProperty 'junit.jupiter.execution.parallel.mode.classes.default', 'same_thread'
@@ -103,4 +110,20 @@ tasks.register('generateAndroidR') {
     }
 }
 
-apply from: "${rootProject.layout.projectDirectory.file('gradle/publishing.gradle')}"
+apply from: "${rootProject.layout.projectDirectory.file('gradle/dokka.gradle')}"
+apply from: "${rootProject.layout.projectDirectory.file('gradle/pom.gradle')}"
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact(kotlinSourcesJar)
+            artifact(dokkaJavadocJar)
+
+            setupPom(it, 'JUnit5 Robolectric Extension')
+        }
+    }
+}
+
+apply from: "${rootProject.layout.projectDirectory.file('gradle/setupMavenCentralForPublishing.gradle')}"
+apply from: "${rootProject.layout.projectDirectory.file('gradle/signing.gradle')}"

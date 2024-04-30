@@ -1,0 +1,16 @@
+apply plugin: 'maven-publish'
+
+publishing {
+    repositories {
+        maven {
+            name = 'MavenCentral'
+            final releasesRepoUrl = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2'
+            final snapshotsRepoUrl = 'https://s01.oss.sonatype.org/content/repositories/snapshots'
+            url = version.toString().endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
+            credentials {
+                username = System.getenv('JUNIT5_ROBOLECTRIC_EXTENSION_MAVEN_USERNAME')
+                password = System.getenv('JUNIT5_ROBOLECTRIC_EXTENSION_MAVEN_PASSWORD')
+            }
+        }
+    }
+}

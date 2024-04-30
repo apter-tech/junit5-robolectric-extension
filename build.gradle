@@ -7,8 +7,17 @@ allprojects {
     version = property('tech.apter.junit5.robolectric.extension.version')
 }
 
+subprojects {
+    configurations.configureEach {
+        resolutionStrategy.dependencySubstitution {
+            substitute module("tech.apter.junit5.jupiter:robolectric-extension:$version") using project(':robolectric-extension')
+        }
+    }
+}
+
 dependencies {
     kover(project(':integration-tests:agp-groovy-dsl'))
     kover(project(':integration-tests:agp-kotlin-dsl'))
     kover(project(':robolectric-extension'))
+    kover(project(':robolectric-extension-gradle-plugin'))
 }

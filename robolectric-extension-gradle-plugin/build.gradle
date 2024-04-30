@@ -1,0 +1,62 @@
+plugins {
+    id('java-gradle-plugin')
+    alias(libs.plugins.kotlinJvm)
+    alias(libs.plugins.buildConfig)
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.dokka)
+    alias(libs.plugins.kotlinxKover)
+    id('maven-publish')
+    id('signing')
+    alias(libs.plugins.gradlePluginPublish)
+}
+
+buildConfig {
+    useKotlinOutput()
+    packageName('tech.apter.robolectric.junit.jupiter.gradle.plugin')
+    buildConfigField(String, 'ROBOLECTRIC_EXTENSION_VERSION', project.version)
+    buildConfigField(String, 'JUNIT5_BOM_VERSION', libs.junit5Bom.get().version)
+}
+
+kotlin {
+    jvmToolchain(libs.versions.jvmToolchain.get().toInteger())
+}
+
+detekt {
+    toolVersion = libs.versions.detekt.get()
+    autoCorrect true
+}
+
+dependencies {
+    detektPlugins(libs.detektFormatting)
+    detektPlugins(libs.detektRulesLibraries)
+    compileOnly(gradleApi())
+    compileOnly(libs.androidGradle)
+}
+
+gradlePlugin {
+    website = 'https://github.com/apter-tech/junit5-robolectric-extension'
+    vcsUrl = 'https://github.com/apter-tech/junit5-robolectric-extension.git'
+    plugins {
+        robolectricJUnitJupiterGradlePlugin {
+            id = 'tech.apter.junit5.jupiter.robolectric-extension-gradle-plugin'
+            displayName = 'JUnit5 Robolectric Extension Gradle Plugin'
+            description = """This repository aims to bridge the gap between JUnit 5 and Robolectric, 
+                    |enabling developers to leverage the benefits of both frameworks 
+                    |for unit testing Android applications. While Robolectric currently lacks 
+                    |a dedicated JUnit 5 extension, this project proposes a community-driven solution to 
+                    |achieve seamless integration.""".stripMargin()
+            tags.addAll('Robolectric', 'JUnit5', 'JUnit Jupiter', 'androidTesting', 'testing', 'android')
+            implementationClass = 'tech.apter.robolectric.junit.jupiter.gradle.plugin.RobolectricJUnitJupiterGradlePlugin'
+        }
+    }
+}
+
+apply from: "${rootProject.layout.projectDirectory.file('gradle/pom.gradle')}"
+publishing {
+    publications.withType(MavenPublication).configureEach {
+        setupPom(it, 'JUnit5 Robolectric Extension Gradle Plugin')
+    }
+}
+apply from: "${rootProject.layout.projectDirectory.file('gradle/setupMavenCentralForPublishing.gradle')}"
+apply from: "${rootProject.layout.projectDirectory.file('gradle/signing.gradle')}"
+

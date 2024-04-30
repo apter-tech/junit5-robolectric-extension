@@ -26,6 +26,7 @@
             <option value="$PROJECT_DIR$/integration-tests/agp-groovy-dsl" />
             <option value="$PROJECT_DIR$/integration-tests/agp-kotlin-dsl" />
             <option value="$PROJECT_DIR$/robolectric-extension" />
+            <option value="$PROJECT_DIR$/robolectric-extension-gradle-plugin" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />
