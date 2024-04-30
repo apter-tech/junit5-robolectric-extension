@@ -24,8 +24,8 @@ function bumpVersion() {
   else
     local -r newVersion="$1"
   fi
-  sed -ie "s/^tech\.apter\.junit5\.robolectric\.extension\.version=.*/tech.apter.junit5.robolectric.extension.version=${newVersion}/" "$propertiesFile"
-  rm -rf "${propertiesFile}e"
+  sed -i .bak "s/^tech\.apter\.junit5\.robolectric\.extension\.version=.*/tech.apter.junit5.robolectric.extension.version=${newVersion}/" "$propertiesFile"
+  rm -rf "${propertiesFile}.bak"
   echo "$newVersion"
 }
 

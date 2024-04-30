@@ -32,7 +32,9 @@ jobs:
       - name: Bump version
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.releaseVersion != ''
         run: |
-          ./bumpVersion.sh "${{ github.event.inputs.releaseVersion }}"
+          ./bumpVersion.sh "${RELEASE_VERSION}"
+        env:
+          RELEASE_VERSION: ${{ github.event.inputs.releaseVersion }}
       - name: Publish Gradle Plugin
         run: |
           ./publishGradlePlugin.sh
@@ -68,9 +70,13 @@ jobs:
       - name: Create release
         shell: bash
         run: |
-          git config --global user.name "${GITHUB_ACTOR}"
-          git config --global user.email "${GITHUB_ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
-          ./tagRelease.sh "${{ github.event.inputs.releaseVersion }}"
+          git config --global user.name "${GIT_USER_NAME}"
+          git config --global user.email "${GIT_USER_EMAIL}"
+          ./tagRelease.sh "${RELEASE_VERSION}"
+        env:
+          GIT_USER_NAME: ${{ github.actor }}
+          GIT_USER_EMAIL: ${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com
+          RELEASE_VERSION: ${{ github.event.inputs.releaseVersion }}
   kover:
     runs-on: ubuntu-22.04
     needs:
