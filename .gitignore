@@ -58,4 +58,4 @@ bin/
 local.properties
 
 ### bumbVersion.sh ###
-gradle.propertiese
+gradle.properties.bak
