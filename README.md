@@ -1,9 +1,8 @@
 # JUnit5 Robolectric Extension (Experimental)
 
 This is an experimental project that aims to bridge the gap between JUnit 5 and Robolectric,
-providing a way to run your
-Android unit tests using the modern JUnit 5 framework while leveraging Robolectric's
-in-memory environment.
+providing a way to run your Android unit tests using the modern JUnit 5 framework while leveraging
+Robolectric's in-memory environment.
 
 ## Key features
 
@@ -14,16 +13,16 @@ in-memory environment.
 * **Parallel Execution:** Parallel test execution is not yet supported. We're actively working on
   addressing this limitation in future releases.
 * **Configuration:**
-    * Robolectric `@Config`'s sdk parameter annotation can only be set on most outer test class.
-    * `@ResourcesMode`, `@LooperMode`, `GraphicsMode` annotations can only be set on most outer test
+    * Robolectric `@Config`'s sdk parameter annotation can only be set on outermost test class.
+    * `@ResourcesMode`, `@LooperMode`, `GraphicsMode` annotations can only be set on outermost test
       class.
 * **Experimental Status:** This extension is still under development, and its API might change in
   future versions.
 
 ## Installation
 
-1. Add the Gradle Plugin Portal and Maven Central and Google's Maven repository to your project'
-   s `settings.gradle` file:
+1. Add the Gradle Plugin Portal and Maven Central and Google's Maven repository to your project's
+   `settings.gradle` file:
 
 <details open>
 <summary>Kotlin</summary>
