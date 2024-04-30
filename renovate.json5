@@ -1,0 +1,13 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "github>apter-tech/renovate-config#v0.7.0"
+  ],
+  "ignoreDeps": [
+    // Ignore junit packages, we use org.junit:junit-bom instead.
+    "org.junit.platform:junit-platform-launcher",
+    "org.junit.jupiter:junit-jupiter-params",
+    "org.junit.jupiter:junit-jupiter-engine",
+    "org.junit.jupiter:junit-jupiter-api",
+  ]
+}
