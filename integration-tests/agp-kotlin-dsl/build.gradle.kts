@@ -1,19 +1,10 @@
-import tech.apter.robolectric.junit.jupiter.gradle.plugin.RobolectricJUnitJupiterGradlePlugin
-
-buildscript {
-    dependencies {
-        classpath("tech.apter.junit5.jupiter:robolectric-extension-gradle-plugin:$version")
-    }
-}
-
 plugins {
     id("com.android.library")
     alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.kotlinxKover)
     alias(libs.plugins.detekt)
+    alias(libs.plugins.robolectricExtensionGradlePlugin)
 }
-
-apply(mapOf("plugin" to RobolectricJUnitJupiterGradlePlugin::class.java))
 
 android {
     namespace = "tech.apter.junit.jupiter.robolectric.integration.tests.agp.kotlin.dsl"

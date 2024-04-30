@@ -16,6 +16,7 @@ kotlin = "1.9.23"
 kover = "0.7.6"
 robolectric = "4.12.1"
 robolectricAndroidAll = "14-robolectric-10818077"
+robolectricExtensionGradlePlugin = "0.3.0"
 # Use when bom also added to the dependencies
 sources = "sources"
 
@@ -46,3 +47,4 @@ gradlePluginPublish = { id = "com.gradle.plugin-publish", version.ref = "gradleP
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlinxKover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
+robolectricExtensionGradlePlugin = { id = "tech.apter.junit5.jupiter.robolectric-extension-gradle-plugin", version.ref = "robolectricExtensionGradlePlugin" }
