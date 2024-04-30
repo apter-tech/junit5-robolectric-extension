@@ -1,7 +1,7 @@
 [versions]
 androidBuildTools = "34.0.0"
 androidCompileSdk = "34"
-androidGradle = "8.3.2"
+androidGradle = "8.4.0"
 androidMinimumSdk = "14"
 androidxTestExtJunit = "1.1.5"
 buildConfig = "5.3.5"
