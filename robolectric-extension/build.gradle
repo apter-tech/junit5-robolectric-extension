@@ -1,22 +1,15 @@
 import org.robolectric.gradle.AarDepsPlugin
-import tech.apter.robolectric.junit.jupiter.gradle.plugin.RobolectricJUnitJupiterGradlePlugin
-
-buildscript {
-    dependencies {
-        classpath("tech.apter.junit5.jupiter:robolectric-extension-gradle-plugin:$version")
-    }
-}
 
 plugins {
     alias(libs.plugins.kotlinJvm)
     alias(libs.plugins.kotlinxKover)
     alias(libs.plugins.detekt)
     alias(libs.plugins.dokka)
+    alias(libs.plugins.robolectricExtensionGradlePlugin)
     id('maven-publish')
 }
 
 apply plugin: AarDepsPlugin
-apply plugin: RobolectricJUnitJupiterGradlePlugin
 
 configurations.configureEach { configuration ->
     configuration.exclude(group: 'androidx.tracing', module: 'tracing')
