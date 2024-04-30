@@ -1,6 +1,13 @@
 name: Build with Gradle
 
 on:
+  workflow_dispatch:
+    inputs:
+      releaseVersion:
+        type: string
+        description: New version for the release. When empty release publishing skipped.
+        default: ''
+        required: true
   push:
     branches: [ 'main' ]
   pull_request:
@@ -22,6 +29,12 @@ jobs:
           distribution: 'temurin'
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@db19848a5fa7950289d3668fb053140cf3028d43 # v3.3.2
+      - name: Bump version
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.releaseVersion != ''
+        run: |
+          ./bumpVersion.sh "${RELEASE_VERSION}"
+        env:
+          RELEASE_VERSION: ${{ github.event.inputs.releaseVersion }}
       - name: Publish Gradle Plugin
         run: |
           ./publishGradlePlugin.sh
@@ -45,6 +58,25 @@ jobs:
           name: kover-report
           path: ${{ github.workspace }}/build/reports/kover/report.xml
           retention-days: 5
+  release:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    needs:
+      - build
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.releaseVersion != ''
+    steps:
+      - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+      - name: Create release
+        shell: bash
+        run: |
+          git config --global user.name "${GIT_USER_NAME}"
+          git config --global user.email "${GIT_USER_EMAIL}"
+          ./tagRelease.sh "${RELEASE_VERSION}"
+        env:
+          GIT_USER_NAME: ${{ github.actor }}
+          GIT_USER_EMAIL: ${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com
+          RELEASE_VERSION: ${{ github.event.inputs.releaseVersion }}
   kover:
     runs-on: ubuntu-22.04
     needs:
@@ -54,7 +86,7 @@ jobs:
       checks: write
       contents: read
       pull-requests: write
-
+    if: github.event_name == 'pull_request'
     steps:
       - name: Download coverage report
         uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e # v4.1.7

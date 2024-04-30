@@ -56,3 +56,6 @@ bin/
 
 ### Android ###
 local.properties
+
+### bumbVersion.sh ###
+gradle.properties.bak
