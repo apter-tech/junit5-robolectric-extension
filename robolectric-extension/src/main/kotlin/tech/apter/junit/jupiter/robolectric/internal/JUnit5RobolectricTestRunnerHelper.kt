@@ -21,7 +21,7 @@ import java.util.concurrent.Callable
 import java.util.concurrent.ConcurrentHashMap
 
 @Suppress("TooManyFunctions")
-internal class JUnit5RobolectricTestRunnerHelper(testClass: Class<*>) {
+internal class JUnit5RobolectricTestRunnerHelper private constructor(testClass: Class<*>) {
     private inline val logger get() = createLogger()
     private var _robolectricTestRunner: JUnit5RobolectricTestRunner? = null
 
