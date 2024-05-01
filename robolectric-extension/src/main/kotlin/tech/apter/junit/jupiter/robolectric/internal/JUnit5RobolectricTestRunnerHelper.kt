@@ -15,7 +15,7 @@ import tech.apter.junit.jupiter.robolectric.RobolectricExtension
 import tech.apter.junit.jupiter.robolectric.internal.extensions.createLogger
 import tech.apter.junit.jupiter.robolectric.internal.extensions.isExtendedWithRobolectric
 import tech.apter.junit.jupiter.robolectric.internal.extensions.isNestedTest
-import tech.apter.junit.jupiter.robolectric.internal.extensions.mostOuterDeclaringClass
+import tech.apter.junit.jupiter.robolectric.internal.extensions.outerMostDeclaringClass
 import java.lang.reflect.Method
 import java.util.concurrent.Callable
 import java.util.concurrent.ConcurrentHashMap
@@ -148,7 +148,7 @@ internal class JUnit5RobolectricTestRunnerHelper(testClass: Class<*>) {
             }
             return helperRunnerCache.getOrPut(testClass.name) {
                 val originalClassLoader = Thread.currentThread().contextClassLoader
-                val appClassLoader = appClassLoaderCache.getOrPut(testClass.mostOuterDeclaringClass()) {
+                val appClassLoader = appClassLoaderCache.getOrPut(testClass.outerMostDeclaringClass()) {
                     createLogger().trace {
                         "app class loader created for ${testClass.name.substringAfterLast('.')}"
                     }
