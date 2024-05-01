@@ -11,7 +11,7 @@ import org.robolectric.internal.bytecode.InstrumentationConfiguration
 import org.robolectric.internal.bytecode.ShadowProviders
 import org.robolectric.pluginapi.Sdk
 import tech.apter.junit.jupiter.robolectric.internal.extensions.createLogger
-import tech.apter.junit.jupiter.robolectric.internal.extensions.mostOuterDeclaringClass
+import tech.apter.junit.jupiter.robolectric.internal.extensions.outerMostDeclaringClass
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 
@@ -52,13 +52,11 @@ internal class JUnit5RobolectricSandboxBuilder @Inject constructor(
         instrumentationConfig: InstrumentationConfiguration,
         runtimeSdk: Sdk,
     ): SdkSandboxClassLoader {
-        val mostOuterDeclaringClassName = testClass.mostOuterDeclaringClass().name
-        return classLoaderCache.getOrPut(mostOuterDeclaringClassName) {
+        val outerMostDeclaringClassName = testClass.outerMostDeclaringClass().name
+        return classLoaderCache.getOrPut(outerMostDeclaringClassName) {
             logger.debug {
                 "Create ${SdkSandboxClassLoader::class.simpleName}[$runtimeSdk] instance for ${
-                    mostOuterDeclaringClassName.substringAfterLast(
-                        '.'
-                    )
+                    outerMostDeclaringClassName.substringAfterLast('.')
                 }"
             }
             SdkSandboxClassLoader(instrumentationConfig, runtimeSdk, classInstrumentor)

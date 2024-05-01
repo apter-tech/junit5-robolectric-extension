@@ -25,21 +25,21 @@ internal inline val Class<*>.isNested: Boolean get() = declaringClass != null
 internal inline val Class<*>.isNestedTest: Boolean
     get() = isNested && findAnnotations(type = Nested::class.java).isNotEmpty()
 
-internal tailrec fun Class<*>.nearestOuterNestedTestOrMostOuterDeclaringClass(): Class<*> {
+internal tailrec fun Class<*>.nearestOuterNestedTestOrOuterMostDeclaringClass(): Class<*> {
     return if (declaringClass == null || isNestedTest) {
         this
     } else if (declaringClass.isNestedTest) {
         declaringClass
     } else {
-        declaringClass.nearestOuterNestedTestOrMostOuterDeclaringClass()
+        declaringClass.nearestOuterNestedTestOrOuterMostDeclaringClass()
     }
 }
 
-internal tailrec fun Class<*>.mostOuterDeclaringClass(): Class<*> {
+internal tailrec fun Class<*>.outerMostDeclaringClass(): Class<*> {
     return if (declaringClass == null) {
         this
     } else {
-        return declaringClass.mostOuterDeclaringClass()
+        return declaringClass.outerMostDeclaringClass()
     }
 }
 
