@@ -6,8 +6,8 @@ import org.robolectric.internal.AndroidSandbox
 import org.robolectric.internal.ResourcesMode
 import org.robolectric.internal.bytecode.ShadowProviders
 import org.robolectric.pluginapi.Sdk
-import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ThreadFactory
+import java.util.concurrent.atomic.AtomicLong
 
 @Suppress("LongParameterList")
 internal class JUnit5RobolectricAndroidSandbox(
@@ -31,14 +31,13 @@ internal class JUnit5RobolectricAndroidSandbox(
 ) {
     override fun mainThreadFactory(): ThreadFactory {
         return ThreadFactory { r: Runnable? ->
-            val name = "SDK-${sdk.apiLevel}"
-            Thread(ThreadGroup(name), r, "$name-Main-Thread-${sdk.createThreadId()}")
+            val name = "${createThreadId()}-SDK-${sdk.apiLevel}"
+            Thread(ThreadGroup(name), r, "Main-Thread-$name")
         }
     }
 
     private companion object {
-        private val threadIds = ConcurrentHashMap<String, Int>()
-        private fun Sdk.createThreadId(): Int = threadIds.getOrPut("$apiLevel") { 1 }
-            .also { threadIds["$apiLevel"] = it + 1 }
+        private val threadIds = AtomicLong(1)
+        private fun createThreadId(): Long = threadIds.getAndIncrement()
     }
 }
