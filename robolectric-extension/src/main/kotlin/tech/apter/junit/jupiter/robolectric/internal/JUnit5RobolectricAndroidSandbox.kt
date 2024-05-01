@@ -37,6 +37,7 @@ internal class JUnit5RobolectricAndroidSandbox(
     }
 
     private companion object {
+        // AtomicLong is used here for safe and efficient ID generation across multiple threads.
         private val threadIds = AtomicLong(1)
         private fun createThreadId(): Long = threadIds.getAndIncrement()
     }
