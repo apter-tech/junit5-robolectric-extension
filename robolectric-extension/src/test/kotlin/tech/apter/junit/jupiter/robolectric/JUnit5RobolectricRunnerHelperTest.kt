@@ -117,5 +117,5 @@ class JUnit5RobolectricRunnerHelperTest {
         testClass: Class<*>,
         action: JUnit5RobolectricTestRunnerHelper.() -> Unit,
     ): JUnit5RobolectricTestRunnerHelper =
-        JUnit5RobolectricTestRunnerHelper(testClass).apply(action)
+        JUnit5RobolectricTestRunnerHelper.getInstance(testClass).apply(action)
 }
