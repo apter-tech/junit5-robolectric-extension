@@ -9,7 +9,7 @@ import org.robolectric.internal.SandboxManager
 import org.robolectric.internal.bytecode.InstrumentationConfiguration
 import org.robolectric.pluginapi.Sdk
 import org.robolectric.plugins.SdkCollection
-import tech.apter.junit.jupiter.robolectric.internal.extensions.mostOuterDeclaringClass
+import tech.apter.junit.jupiter.robolectric.internal.extensions.outerMostDeclaringClass
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 
@@ -32,7 +32,7 @@ internal class JUnit5RobolectricSandboxManager @Inject constructor(
         val compileSdk = sdkCollection.maxSupportedSdk
 
         val key = SandboxKey(
-            testClassName = testClass.mostOuterDeclaringClass().name,
+            testClassName = testClass.outerMostDeclaringClass().name,
             instrumentationConfiguration = instrumentationConfig,
             sdk = sdk,
             resourcesMode = resourcesMode,

@@ -13,7 +13,7 @@ import org.robolectric.util.inject.Injector
 import tech.apter.junit.jupiter.robolectric.RobolectricExtension
 import tech.apter.junit.jupiter.robolectric.internal.extensions.createLogger
 import tech.apter.junit.jupiter.robolectric.internal.extensions.hasTheSameParameterTypes
-import tech.apter.junit.jupiter.robolectric.internal.extensions.mostOuterDeclaringClass
+import tech.apter.junit.jupiter.robolectric.internal.extensions.outerMostDeclaringClass
 import java.lang.reflect.Method
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.locks.Lock
@@ -69,7 +69,7 @@ internal class JUnit5RobolectricTestRunner(
         }
     }
 
-    private fun beforeTestLock(): Lock = beforeTestLocks.getOrPut(testClass.javaClass.mostOuterDeclaringClass().name) {
+    private fun beforeTestLock(): Lock = beforeTestLocks.getOrPut(testClass.javaClass.outerMostDeclaringClass().name) {
         ReentrantReadWriteLock()
     }.writeLock()
 
