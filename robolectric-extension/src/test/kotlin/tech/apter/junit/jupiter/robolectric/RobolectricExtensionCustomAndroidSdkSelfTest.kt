@@ -4,6 +4,8 @@ import android.os.Build
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.api.parallel.Execution
+import org.junit.jupiter.api.parallel.ExecutionMode
 import org.robolectric.annotation.Config
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -19,6 +21,7 @@ class RobolectricExtensionCustomAndroidSdkSelfTest {
     }
 
     @Nested
+    @Execution(ExecutionMode.SAME_THREAD)
     inner class NestedSelfTest {
         @Test
         fun `Given a test class configured with custom runtime SDK when call test from a nested test class then SDK_INT should be the version set up`() {
@@ -32,6 +35,7 @@ class RobolectricExtensionCustomAndroidSdkSelfTest {
         }
 
         @Nested
+        @Execution(ExecutionMode.SAME_THREAD)
         inner class TwoLevelNestedSelfTest {
             @Test
             fun `Given a test class configured with custom runtime SDK when call test from a nested test class then SDK_INT should be the version set up`() {
