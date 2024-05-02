@@ -26,11 +26,21 @@ detekt {
     autoCorrect true
 }
 
+test {
+    useJUnitPlatform()
+}
+
 dependencies {
     detektPlugins(libs.detektFormatting)
     detektPlugins(libs.detektRulesLibraries)
     compileOnly(gradleApi())
     compileOnly(libs.androidGradle)
+    testImplementation(gradleTestKit())
+    testImplementation(platform(libs.junit5Bom))
+    testImplementation(libs.junit5JupiterApi)
+    testImplementation(libs.kotlinTestJUnit5)
+    testImplementation(libs.androidGradle)
+    testRuntimeOnly(libs.junit5JupiterEngine)
 }
 
 gradlePlugin {
