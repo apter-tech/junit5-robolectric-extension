@@ -38,6 +38,9 @@ jobs:
       - name: Publish Gradle Plugin to Maven Local
         run: |
           ./gradlew :robolectric-extension-gradle-plugin:publishToMavenLocal --configure-on-demand
+        env:
+          JUNIT5_ROBOLECTRIC_EXTENSION_GPG_SIGNING_KEY: '${{ secrets.JUNIT5_ROBOLECTRIC_EXTENSION_GPG_SIGNING_KEY }}'
+          JUNIT5_ROBOLECTRIC_EXTENSION_GPG_SIGNING_PASSWORD: '${{ secrets.JUNIT5_ROBOLECTRIC_EXTENSION_GPG_SIGNING_PASSWORD }}'
       - name: Build with Gradle Wrapper
         run: |
           ./gradlew build koverXmlReport publish
