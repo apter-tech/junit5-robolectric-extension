@@ -9,8 +9,8 @@ import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.InvocationInterceptor
 import org.junit.jupiter.api.extension.ReflectiveInvocationContext
 import tech.apter.junit.jupiter.robolectric.internal.JUnit5RobolectricTestRunnerHelper
-import tech.apter.junit.jupiter.robolectric.internal.validation.TestClassValidator
 import tech.apter.junit.jupiter.robolectric.internal.extensions.createLogger
+import tech.apter.junit.jupiter.robolectric.internal.validation.TestClassValidator
 import tech.apter.junit.jupiter.robolectric.internal.validation.TestMethodValidator
 import java.lang.reflect.Method
 import kotlin.jvm.optionals.getOrNull

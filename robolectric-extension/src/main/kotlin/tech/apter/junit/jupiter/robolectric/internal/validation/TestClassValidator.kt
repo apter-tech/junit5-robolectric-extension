@@ -35,7 +35,9 @@ internal class TestClassValidator(private val testClass: Class<*>) {
         annotationsClasses.forEach { annotationClass ->
             val annotation = testClass.getAnnotation(annotationClass)
             if (annotation != null) {
-                error("${annotationClass.simpleName} annotation cannot be used on a nested test class: ${testClass.name}")
+                error(
+                    "${annotationClass.simpleName} annotation cannot be used on a nested test class: ${testClass.name}"
+                )
             }
         }
     }
@@ -52,16 +54,18 @@ internal class TestClassValidator(private val testClass: Class<*>) {
     ) {
         fun Class<*>.isDeclaredNestedTestClasses() = declaredClasses.any { it.isNestedTest }
         fun Class<*>.isConcurrent() =
-            (System.getProperty("junit.jupiter.execution.parallel.mode.classes.default") == "concurrent" &&
-                executionMode() != ExecutionMode.SAME_THREAD) ||
+            (
+                System.getProperty("junit.jupiter.execution.parallel.mode.classes.default") == "concurrent" &&
+                    executionMode() != ExecutionMode.SAME_THREAD
+                ) ||
                 executionMode() == ExecutionMode.CONCURRENT
 
         if (testClass.declaringClass == null) {
             if (testClass.isDeclaredNestedTestClasses() && testClass.isConcurrent()) {
                 error(
                     "${testClass.simpleName} must be annotated with @Execution(ExecutionMode.SAME_THREAD). " +
-                        "Because it declared nested test classes. " +
-                        "Or system property junit.jupiter.execution.parallel.mode.classes.default=same_thread must be set"
+                        "Because it declared nested test classes. Or" +
+                        " system property junit.jupiter.execution.parallel.mode.classes.default=same_thread must be set"
                 )
             }
         }
