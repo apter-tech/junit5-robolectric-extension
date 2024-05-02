@@ -52,9 +52,9 @@ internal fun Sandbox.resetClassLoaderToOriginal() {
     createLogger().trace {
         "resetClassLoaderToOriginal ${robolectricClassLoader.parent.javaClass.simpleName}@${
             System.identityHashCode(
-                robolectricClassLoader.parent.parent
+                robolectricClassLoader.parent
             )
         }"
     }
-    Thread.currentThread().contextClassLoader = robolectricClassLoader.parent.parent
+    Thread.currentThread().contextClassLoader = robolectricClassLoader.parent
 }

@@ -55,14 +55,6 @@ internal class JUnit5RobolectricTestRunner(
         }
     }
 
-    override fun getSandbox(method: FrameworkMethod): AndroidSandbox {
-        val originalClassLoader = Thread.currentThread().contextClassLoader
-        Thread.currentThread().contextClassLoader = createParentClassLoader(testClass.javaClass)
-        return super.getSandbox(method).also {
-            Thread.currentThread().contextClassLoader = originalClassLoader
-        }
-    }
-
     fun runBeforeTest(
         sdkEnvironment: Sandbox,
         frameworkMethod: FrameworkMethod,
@@ -126,23 +118,11 @@ internal class JUnit5RobolectricTestRunner(
 
     internal companion object {
         private val beforeTestLock = Any()
-        private val sdkSandboxParentClassLoaderCache = ConcurrentHashMap<String, ClassLoader>()
 
         private fun defaultInjectorBuilder() =
             defaultInjector().bind(SandboxBuilder::class.java, JUnit5RobolectricSandboxBuilder::class.java)
                 .bind(MavenDependencyResolver::class.java, JUnit5MavenDependencyResolver::class.java)
                 .bind(SandboxManager::class.java, JUnit5RobolectricSandboxManager::class.java)
 
-        private fun createParentClassLoader(testClass: Class<*>) =
-            sdkSandboxParentClassLoaderCache.getOrPut(testClass.outerMostDeclaringClass().name) {
-                createLogger().trace {
-                    "parent class loader created for ${testClass.name.substringAfterLast('.')}"
-                }
-                SdkSandboxParentClassLoader(Thread.currentThread().contextClassLoader)
-            }
-
-        internal fun cleanCache() {
-            sdkSandboxParentClassLoaderCache.clear()
-        }
     }
 }

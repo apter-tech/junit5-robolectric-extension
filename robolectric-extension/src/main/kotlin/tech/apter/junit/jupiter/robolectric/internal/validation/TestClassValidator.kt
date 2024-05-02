@@ -7,9 +7,9 @@ import org.robolectric.annotation.GraphicsMode
 import org.robolectric.annotation.LooperMode
 import tech.apter.junit.jupiter.robolectric.internal.extensions.isNestedTest
 
-internal class TestClassValidator(private val testClass: Class<*>) {
+internal object TestClassValidator {
 
-    fun validate() {
+    fun validate(testClass: Class<*>) {
         validateParallelModeDefault()
         validateTestWithNestedTestsCanNotBeExecutedConcurrently(testClass)
         validateNestedTestCanNotBeExecutedConcurrently(testClass)

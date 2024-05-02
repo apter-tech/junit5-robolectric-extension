@@ -5,9 +5,9 @@ import org.junit.jupiter.api.parallel.ExecutionMode
 import org.robolectric.annotation.Config
 import java.lang.reflect.Method
 
-internal class TestMethodValidator(private val testMethod: Method) {
+internal object TestMethodValidator {
 
-    fun validate() {
+    fun validate(testMethod: Method) {
         validateTestMethodCanNotBeExecutedConcurrently(testMethod)
         validateTestMethodsCanNotOverrideRuntimeSdk(testMethod)
     }

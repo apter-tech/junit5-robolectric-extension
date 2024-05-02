@@ -70,10 +70,6 @@ internal class JUnit5RobolectricTestRunnerHelper private constructor(testClass: 
         sdkEnvironment.runOnMainThreadWithRobolectric { invocation.proceed() }
     }
 
-    fun clearCachedRobolectricTestRunnerEnvironment() {
-        _robolectricTestRunner = null
-    }
-
     internal companion object {
         @VisibleForTesting
         internal var interceptedClassLoader: ClassLoader? = null
@@ -93,7 +89,6 @@ internal class JUnit5RobolectricTestRunnerHelper private constructor(testClass: 
 
         internal fun shutdown() {
             checkNotNull(interceptedClassLoader) { "interceptedClassLoader is not yet set" }
-            JUnit5RobolectricTestRunner.cleanCache()
             helperRunnerCache.clear()
             Thread.currentThread().contextClassLoader = interceptedClassLoader
         }

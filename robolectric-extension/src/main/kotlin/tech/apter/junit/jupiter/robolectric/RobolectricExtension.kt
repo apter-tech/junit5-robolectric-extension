@@ -30,14 +30,14 @@ class RobolectricExtension :
 
     override fun beforeAll(context: ExtensionContext) {
         logger.trace { "beforeAll ${context.requiredTestClass.simpleName}" }
-        TestClassValidator(context.requiredTestClass).validate()
+        TestClassValidator.validate(context.requiredTestClass)
     }
 
     override fun beforeEach(context: ExtensionContext) {
         logger.trace {
             "beforeEach ${context.requiredTestClass.simpleName}::${context.requiredTestMethod.name}"
         }
-        TestMethodValidator(context.requiredTestMethod).validate()
+        TestMethodValidator.validate(context.requiredTestMethod)
         val testRunnerHelper = testRunnerHelper(context.requiredTestClass)
         testRunnerHelper.beforeEach(context.requiredTestMethod)
     }
@@ -52,7 +52,6 @@ class RobolectricExtension :
 
     override fun afterAll(context: ExtensionContext) {
         logger.trace { "afterAll ${context.requiredTestClass.simpleName}" }
-        testRunnerHelper(context.requiredTestClass).clearCachedRobolectricTestRunnerEnvironment()
     }
 
     override fun interceptBeforeAllMethod(
