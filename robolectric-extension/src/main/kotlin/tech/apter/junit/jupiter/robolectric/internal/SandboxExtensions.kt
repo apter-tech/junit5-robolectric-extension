@@ -19,13 +19,6 @@ internal fun <T> Sandbox.runWithRobolectric(action: () -> T): T {
     }
 }
 
-internal fun <T> Sandbox.runWithRobolectricParent(action: () -> T): T {
-    loadRobolectricParentClassLoader()
-    return action().also {
-        resetClassLoaderToOriginal()
-    }
-}
-
 internal fun Sandbox.loadRobolectricClassLoader() {
     createLogger().trace {
         "loadRobolectricClassLoader ${robolectricClassLoader.javaClass.simpleName}@${
@@ -35,17 +28,6 @@ internal fun Sandbox.loadRobolectricClassLoader() {
         }"
     }
     Thread.currentThread().contextClassLoader = robolectricClassLoader
-}
-
-internal fun Sandbox.loadRobolectricParentClassLoader() {
-    createLogger().trace {
-        "loadRobolectricParentClassLoader ${robolectricClassLoader.javaClass.simpleName}@${
-            System.identityHashCode(
-                robolectricClassLoader.parent
-            )
-        }"
-    }
-    Thread.currentThread().contextClassLoader = robolectricClassLoader.parent
 }
 
 internal fun Sandbox.resetClassLoaderToOriginal() {
