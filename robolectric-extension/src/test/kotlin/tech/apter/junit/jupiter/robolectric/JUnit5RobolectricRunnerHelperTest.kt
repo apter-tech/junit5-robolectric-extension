@@ -1,7 +1,6 @@
 package tech.apter.junit.jupiter.robolectric
 
 import org.junit.jupiter.api.assertDoesNotThrow
-import org.junit.jupiter.api.assertThrows
 import org.robolectric.internal.AndroidSandbox.SdkSandboxClassLoader
 import tech.apter.junit.jupiter.robolectric.dummies.SingleTestMethodJunitJupiterTest
 import tech.apter.junit.jupiter.robolectric.dummies.TwoTestMethodsJunitJupiterTest
@@ -98,19 +97,6 @@ class JUnit5RobolectricRunnerHelperTest {
             TwoTestMethodsJunitJupiterTest::class.java,
             cache.robolectricTestRunner.testClass.javaClass
         )
-    }
-
-    @Test
-    fun `Given the runnerHelper configured when call clear then the runnerHelper should be empty`() {
-        // Given
-        val testClass = TwoTestMethodsJunitJupiterTest::class.java
-        val runnerHelper = subjectUnderTest(testClass) {
-            // When
-            clearCachedRobolectricTestRunnerEnvironment()
-        }
-
-        // Then
-        assertThrows<IllegalArgumentException> { runnerHelper.robolectricTestRunner }
     }
 
     private fun subjectUnderTest(

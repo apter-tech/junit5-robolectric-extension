@@ -13,6 +13,8 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Timeout
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.api.parallel.Execution
+import org.junit.jupiter.api.parallel.ExecutionMode
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import org.robolectric.util.ReflectionHelpers
@@ -28,6 +30,7 @@ import kotlin.test.assertTrue
 @ExtendWith(RobolectricExtension::class)
 @Config(application = RobolectricExtensionSelfTest.MyTestApplication::class)
 @DisplayName("Given a test class extended with robolectric")
+@Execution(ExecutionMode.SAME_THREAD)
 class RobolectricExtensionSelfTest {
     @Test
     fun shouldInitializeAndBindApplicationButNotCallOnCreate() {

@@ -20,7 +20,7 @@ class RobolectricLauncherInterceptor : LauncherInterceptor {
 
     override fun close() {
         logger.trace { "close" }
-        JUnit5RobolectricTestRunnerHelper.reset()
+        JUnit5RobolectricTestRunnerHelper.shutdown()
         classLoaderReplaced.set(false)
     }
 

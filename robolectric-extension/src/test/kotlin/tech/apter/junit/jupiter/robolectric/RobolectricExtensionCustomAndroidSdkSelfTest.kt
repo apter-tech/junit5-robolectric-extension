@@ -4,6 +4,8 @@ import android.os.Build
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.api.parallel.Execution
+import org.junit.jupiter.api.parallel.ExecutionMode
 import org.robolectric.annotation.Config
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -11,6 +13,7 @@ import kotlin.test.assertSame
 
 @ExtendWith(RobolectricExtension::class)
 @Config(sdk = [Build.VERSION_CODES.KITKAT])
+@Execution(ExecutionMode.SAME_THREAD)
 class RobolectricExtensionCustomAndroidSdkSelfTest {
     @Test
     fun `Given a test class configured with custom runtime SDK then SDK_INT should be the version set up`() {

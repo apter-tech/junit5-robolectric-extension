@@ -3,6 +3,8 @@ package tech.apter.junit.jupiter.robolectric
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.api.parallel.Execution
+import org.junit.jupiter.api.parallel.ExecutionMode
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import kotlin.test.Test
@@ -11,6 +13,7 @@ import kotlin.test.assertContains
 @ExtendWith(RobolectricExtension::class)
 @Config(qualifiers = "fr")
 @DisplayName("Given a test class with fr qualifier config")
+@Execution(ExecutionMode.SAME_THREAD)
 class RobolectricExtensionFrQualifierSelfTest {
     @Test
     fun `then runtime environment's qualifiers should contains fr`() {
