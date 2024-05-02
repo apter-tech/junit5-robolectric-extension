@@ -16,7 +16,6 @@ import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 
 @ExtendWith(RobolectricExtension::class)
-@Execution(ExecutionMode.CONCURRENT)
 class RobolectricExtensionDynamicSelfTest {
     @TestFactory
     fun generateDynamicTests() = testParameters.map { parameter ->
