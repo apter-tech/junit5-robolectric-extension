@@ -16,9 +16,6 @@ import tech.apter.junit.jupiter.robolectric.internal.extensions.hasTheSameParame
 import tech.apter.junit.jupiter.robolectric.internal.extensions.outerMostDeclaringClass
 import java.lang.reflect.Method
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.locks.Lock
-import java.util.concurrent.locks.ReentrantReadWriteLock
-import kotlin.concurrent.withLock
 
 internal data class TestClassContainer(val testClass: Class<*>)
 
@@ -32,7 +29,6 @@ internal class JUnit5RobolectricTestRunner(
 ) : RobolectricTestRunner(clazz, injector) {
     private inline val logger get() = createLogger()
     private val childrenCache = mutableListOf<FrameworkMethod>()
-    private val sandboxLock = Any()
 
     override fun getChildren(): MutableList<FrameworkMethod> {
         if (childrenCache.isEmpty()) {
@@ -60,12 +56,10 @@ internal class JUnit5RobolectricTestRunner(
     }
 
     override fun getSandbox(method: FrameworkMethod): AndroidSandbox {
-        synchronized(sandboxLock) {
-            val originalClassLoader = Thread.currentThread().contextClassLoader
-            Thread.currentThread().contextClassLoader = createParentClassLoader(testClass.javaClass)
-            return super.getSandbox(method).also {
-                Thread.currentThread().contextClassLoader = originalClassLoader
-            }
+        val originalClassLoader = Thread.currentThread().contextClassLoader
+        Thread.currentThread().contextClassLoader = createParentClassLoader(testClass.javaClass)
+        return super.getSandbox(method).also {
+            Thread.currentThread().contextClassLoader = originalClassLoader
         }
     }
 
@@ -74,7 +68,7 @@ internal class JUnit5RobolectricTestRunner(
         frameworkMethod: FrameworkMethod,
         bootstrappedMethod: Method,
     ) {
-        beforeTestLock(testClass.javaClass).withLock {
+        synchronized(beforeTestLock) {
             logger.trace { "runBeforeTest ${bootstrappedMethod.declaringClass.simpleName}::${bootstrappedMethod.name}" }
             super.beforeTest(sdkEnvironment, frameworkMethod, bootstrappedMethod)
         }
@@ -130,19 +124,14 @@ internal class JUnit5RobolectricTestRunner(
         ) = validatePublicVoidNoArgJUnit5Methods(annotation, isStatic, errors)
     }
 
-    private companion object {
-        private val beforeTestLocks = ConcurrentHashMap<String, ReentrantReadWriteLock>()
+    internal companion object {
+        private val beforeTestLock = Any()
         private val sdkSandboxParentClassLoaderCache = ConcurrentHashMap<String, ClassLoader>()
 
         private fun defaultInjectorBuilder() =
             defaultInjector().bind(SandboxBuilder::class.java, JUnit5RobolectricSandboxBuilder::class.java)
                 .bind(MavenDependencyResolver::class.java, JUnit5MavenDependencyResolver::class.java)
                 .bind(SandboxManager::class.java, JUnit5RobolectricSandboxManager::class.java)
-
-        private fun beforeTestLock(testClass: Class<*>): Lock =
-            beforeTestLocks.getOrPut(testClass.outerMostDeclaringClass().name) {
-                ReentrantReadWriteLock()
-            }.writeLock()
 
         private fun createParentClassLoader(testClass: Class<*>) =
             sdkSandboxParentClassLoaderCache.getOrPut(testClass.outerMostDeclaringClass().name) {
@@ -151,5 +140,9 @@ internal class JUnit5RobolectricTestRunner(
                 }
                 SdkSandboxParentClassLoader(Thread.currentThread().contextClassLoader)
             }
+
+        internal fun cleanCache() {
+            sdkSandboxParentClassLoaderCache.clear()
+        }
     }
 }

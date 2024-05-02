@@ -132,11 +132,9 @@ internal class JUnit5RobolectricTestRunnerHelper private constructor(testClass: 
             )
         }
 
-        internal fun reset() {
+        internal fun shutdown() {
             checkNotNull(interceptedClassLoader) { "interceptedClassLoader is not yet set" }
-            helperRunnerCache.values.forEach {
-                it.clearCachedRobolectricTestRunnerEnvironment()
-            }
+            JUnit5RobolectricTestRunner.cleanCache()
             helperRunnerCache.clear()
             Thread.currentThread().contextClassLoader = interceptedClassLoader
         }
