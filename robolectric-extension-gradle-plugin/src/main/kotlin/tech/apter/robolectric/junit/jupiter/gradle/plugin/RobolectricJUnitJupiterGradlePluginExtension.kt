@@ -1,4 +1,8 @@
 package tech.apter.robolectric.junit.jupiter.gradle.plugin
 
+import org.gradle.api.provider.Property
+
 @Suppress("LibraryEntitiesShouldNotBePublic")
-open class RobolectricJUnitJupiterGradlePluginExtension(var doNotAddDependencies: Boolean)
+interface RobolectricJUnitJupiterGradlePluginExtension {
+    val doNotAddDependencies: Property<Boolean>
+}

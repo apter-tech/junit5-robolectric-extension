@@ -18,7 +18,7 @@ class RobolectricJUnitJupiterGradlePlugin : Plugin<Project> {
             setupTestTasks()
             enableIncludeAndroidResources()
             afterEvaluate {
-                if (!extension.doNotAddDependencies) {
+                if (!extension.doNotAddDependencies.get()) {
                     addDependencies()
                 }
             }
@@ -27,29 +27,33 @@ class RobolectricJUnitJupiterGradlePlugin : Plugin<Project> {
 
     private fun Project.registerExtension(): RobolectricJUnitJupiterGradlePluginExtension = extensions.create(
         "robolectricJUnitJupiter",
-        RobolectricJUnitJupiterGradlePluginExtension::class.java,
-        /* doNotAddDependencies= */
-        false,
-    )
+        RobolectricJUnitJupiterGradlePluginExtension::class.java
+    ).apply {
+        doNotAddDependencies.convention(false)
+    }
 
     private fun Project.setupTestTasks() {
-        val jvmArgs = listOf(
-            "-Djunit.platform.launcher.interceptors.enabled=true",
-        )
         tasks.withType(Test::class.java).configureEach { testTask ->
-            testTask.useJUnitPlatform()
-            testTask.jvmArgs(jvmArgs)
+            testTask.prepareForRobolectric()
         }
         tasks.whenTaskAdded { task ->
             if (task is Test) {
-                task.useJUnitPlatform()
-                task.jvmArgs(jvmArgs)
+                task.prepareForRobolectric()
             }
         }
     }
 
+    private fun Test.prepareForRobolectric() {
+        val jvmArgs = listOf(
+            "-Djunit.platform.launcher.interceptors.enabled=true",
+        )
+        useJUnitPlatform()
+        jvmArgs(jvmArgs)
+    }
+
     private fun Project.enableIncludeAndroidResources() {
         val androidExtension = extensions.findByName("android") as? CommonExtension<*, *, *, *, *, *>
+        @Suppress("UnstableApiUsage")
         androidExtension?.testOptions?.unitTests?.isIncludeAndroidResources = true
     }
 
