@@ -13,6 +13,7 @@ import kotlin.test.assertContains
 @ExtendWith(RobolectricExtension::class)
 @Config(qualifiers = "fr")
 @DisplayName("Given a test class with fr qualifier config")
+@Execution(ExecutionMode.SAME_THREAD)
 class RobolectricExtensionFrQualifierSelfTest {
     @Test
     fun `then runtime environment's qualifiers should contains fr`() {
@@ -27,7 +28,6 @@ class RobolectricExtensionFrQualifierSelfTest {
 
     @Nested
     @DisplayName("and a nested test class without config")
-    @Execution(ExecutionMode.SAME_THREAD)
     inner class NestedWithoutConfigSelfTest {
         @Test
         fun `then runtime environment's qualifiers should contains fr`() {
@@ -44,7 +44,6 @@ class RobolectricExtensionFrQualifierSelfTest {
     @Nested
     @DisplayName("and a nested test class where config is overridden to en")
     @Config(qualifiers = "en")
-    @Execution(ExecutionMode.SAME_THREAD)
     inner class QualifierOverrideNestedSelfTest {
         @Test
         fun `then runtime environment's qualifiers should contains en`() {

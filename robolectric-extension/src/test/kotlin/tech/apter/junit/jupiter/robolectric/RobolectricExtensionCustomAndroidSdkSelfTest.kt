@@ -13,6 +13,7 @@ import kotlin.test.assertSame
 
 @ExtendWith(RobolectricExtension::class)
 @Config(sdk = [Build.VERSION_CODES.KITKAT])
+@Execution(ExecutionMode.SAME_THREAD)
 class RobolectricExtensionCustomAndroidSdkSelfTest {
     @Test
     fun `Given a test class configured with custom runtime SDK then SDK_INT should be the version set up`() {
@@ -21,7 +22,6 @@ class RobolectricExtensionCustomAndroidSdkSelfTest {
     }
 
     @Nested
-    @Execution(ExecutionMode.SAME_THREAD)
     inner class NestedSelfTest {
         @Test
         fun `Given a test class configured with custom runtime SDK when call test from a nested test class then SDK_INT should be the version set up`() {
@@ -35,7 +35,6 @@ class RobolectricExtensionCustomAndroidSdkSelfTest {
         }
 
         @Nested
-        @Execution(ExecutionMode.SAME_THREAD)
         inner class TwoLevelNestedSelfTest {
             @Test
             fun `Given a test class configured with custom runtime SDK when call test from a nested test class then SDK_INT should be the version set up`() {

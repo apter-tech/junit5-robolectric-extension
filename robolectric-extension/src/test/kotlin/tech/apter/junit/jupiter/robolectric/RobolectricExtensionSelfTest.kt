@@ -30,6 +30,7 @@ import kotlin.test.assertTrue
 @ExtendWith(RobolectricExtension::class)
 @Config(application = RobolectricExtensionSelfTest.MyTestApplication::class)
 @DisplayName("Given a test class extended with robolectric")
+@Execution(ExecutionMode.SAME_THREAD)
 class RobolectricExtensionSelfTest {
     @Test
     fun shouldInitializeAndBindApplicationButNotCallOnCreate() {
@@ -86,7 +87,6 @@ class RobolectricExtensionSelfTest {
     @Nested
     @Config(qualifiers = "fr")
     @DisplayName("when nested test has fr res qualifier config")
-    @Execution(ExecutionMode.SAME_THREAD)
     inner class CustomQualifierSelfTest {
         @Test
         fun `then runtime environment's qualifiers should contains fr`() {
@@ -96,7 +96,6 @@ class RobolectricExtensionSelfTest {
 
     @Nested
     @DisplayName("when test nested")
-    @Execution(ExecutionMode.SAME_THREAD)
     inner class NestedSelfTest {
         @Test
         fun `then robolectric should be available`() {
