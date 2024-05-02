@@ -35,20 +35,23 @@ jobs:
           ./bumpVersion.sh "${RELEASE_VERSION}"
         env:
           RELEASE_VERSION: ${{ github.event.inputs.releaseVersion }}
-      - name: Publish Gradle Plugin
+      - name: Publish Gradle Plugin to Maven Local
         run: |
-          ./publishGradlePlugin.sh
-        env:
-          JUNIT5_ROBOLECTRIC_EXTENSION_GRADLE_PLUGIN_PORTAL_KEY: '${{ secrets.JUNIT5_ROBOLECTRIC_EXTENSION_GRADLE_PLUGIN_PORTAL_KEY }}'
-          JUNIT5_ROBOLECTRIC_EXTENSION_GRADLE_PLUGIN_PORTAL_SECRET: '${{ secrets.JUNIT5_ROBOLECTRIC_EXTENSION_GRADLE_PLUGIN_PORTAL_SECRET }}'
-          JUNIT5_ROBOLECTRIC_EXTENSION_GPG_SIGNING_KEY: '${{ secrets.JUNIT5_ROBOLECTRIC_EXTENSION_GPG_SIGNING_KEY }}'
-          JUNIT5_ROBOLECTRIC_EXTENSION_GPG_SIGNING_PASSWORD: '${{ secrets.JUNIT5_ROBOLECTRIC_EXTENSION_GPG_SIGNING_PASSWORD }}'
+          ./gradlew :robolectric-extension-gradle-plugin:publishToMavenLocal --configure-on-demand
       - name: Build with Gradle Wrapper
         run: |
           ./gradlew build koverXmlReport publish
         env:
           JUNIT5_ROBOLECTRIC_EXTENSION_MAVEN_USERNAME: '${{ secrets.JUNIT5_ROBOLECTRIC_EXTENSION_MAVEN_USERNAME }}'
           JUNIT5_ROBOLECTRIC_EXTENSION_MAVEN_PASSWORD: '${{ secrets.JUNIT5_ROBOLECTRIC_EXTENSION_MAVEN_PASSWORD }}'
+          JUNIT5_ROBOLECTRIC_EXTENSION_GPG_SIGNING_KEY: '${{ secrets.JUNIT5_ROBOLECTRIC_EXTENSION_GPG_SIGNING_KEY }}'
+          JUNIT5_ROBOLECTRIC_EXTENSION_GPG_SIGNING_PASSWORD: '${{ secrets.JUNIT5_ROBOLECTRIC_EXTENSION_GPG_SIGNING_PASSWORD }}'
+      - name: Publish Gradle Plugin
+        run: |
+          ./publishGradlePlugin.sh
+        env:
+          JUNIT5_ROBOLECTRIC_EXTENSION_GRADLE_PLUGIN_PORTAL_KEY: '${{ secrets.JUNIT5_ROBOLECTRIC_EXTENSION_GRADLE_PLUGIN_PORTAL_KEY }}'
+          JUNIT5_ROBOLECTRIC_EXTENSION_GRADLE_PLUGIN_PORTAL_SECRET: '${{ secrets.JUNIT5_ROBOLECTRIC_EXTENSION_GRADLE_PLUGIN_PORTAL_SECRET }}'
           JUNIT5_ROBOLECTRIC_EXTENSION_GPG_SIGNING_KEY: '${{ secrets.JUNIT5_ROBOLECTRIC_EXTENSION_GPG_SIGNING_KEY }}'
           JUNIT5_ROBOLECTRIC_EXTENSION_GPG_SIGNING_PASSWORD: '${{ secrets.JUNIT5_ROBOLECTRIC_EXTENSION_GPG_SIGNING_PASSWORD }}'
       - name: Upload coverage report
