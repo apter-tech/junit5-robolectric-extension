@@ -9,7 +9,9 @@ import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.InvocationInterceptor
 import org.junit.jupiter.api.extension.ReflectiveInvocationContext
 import tech.apter.junit.jupiter.robolectric.internal.JUnit5RobolectricTestRunnerHelper
+import tech.apter.junit.jupiter.robolectric.internal.validation.TestClassValidator
 import tech.apter.junit.jupiter.robolectric.internal.extensions.createLogger
+import tech.apter.junit.jupiter.robolectric.internal.validation.TestMethodValidator
 import java.lang.reflect.Method
 import kotlin.jvm.optionals.getOrNull
 
@@ -28,12 +30,14 @@ class RobolectricExtension :
 
     override fun beforeAll(context: ExtensionContext) {
         logger.trace { "beforeAll ${context.requiredTestClass.simpleName}" }
+        TestClassValidator(context.requiredTestClass).validate()
     }
 
     override fun beforeEach(context: ExtensionContext) {
         logger.trace {
             "beforeEach ${context.requiredTestClass.simpleName}::${context.requiredTestMethod.name}"
         }
+        TestMethodValidator(context.requiredTestMethod).validate()
         val testRunnerHelper = testRunnerHelper(context.requiredTestClass)
         testRunnerHelper.beforeEach(context.requiredTestMethod)
     }
