@@ -27,19 +27,12 @@ internal class JUnit5RobolectricTestRunner(
     clazz: Class<*>,
     injector: Injector = defaultInjectorBuilder().bind(
         TestClassContainer::class.java,
-        TestClassContainer(testClass = clazz)
+        TestClassContainer(testClass = clazz),
     ).build(),
 ) : RobolectricTestRunner(clazz, injector) {
     private inline val logger get() = createLogger()
     private val childrenCache = mutableListOf<FrameworkMethod>()
-
-    fun frameworkMethod(method: Method): FrameworkMethod = children.first {
-        method.name == it.method.name &&
-            method.declaringClass.name == it.declaringClass.name &&
-            method.hasTheSameParameterTypes(it.method)
-    }
-
-    fun bootstrapSdkEnvironment(): AndroidSandbox = sdkEnvironment(children.first())
+    private val sandboxLock = Any()
 
     override fun getChildren(): MutableList<FrameworkMethod> {
         if (childrenCache.isEmpty()) {
@@ -52,9 +45,27 @@ internal class JUnit5RobolectricTestRunner(
         return childrenCache
     }
 
+    fun frameworkMethod(method: Method): FrameworkMethod = children.first {
+        method.name == it.method.name &&
+            method.declaringClass.name == it.declaringClass.name &&
+            method.hasTheSameParameterTypes(it.method)
+    }
+
+    fun bootstrapSdkEnvironment(): AndroidSandbox = sdkEnvironment(children.first())
+
     fun sdkEnvironment(frameworkMethod: FrameworkMethod): AndroidSandbox {
         return getSandbox(frameworkMethod).also {
             configureSandbox(it, frameworkMethod)
+        }
+    }
+
+    override fun getSandbox(method: FrameworkMethod): AndroidSandbox {
+        synchronized(sandboxLock) {
+            val originalClassLoader = Thread.currentThread().contextClassLoader
+            Thread.currentThread().contextClassLoader = createParentClassLoader(testClass.javaClass)
+            return super.getSandbox(method).also {
+                Thread.currentThread().contextClassLoader = originalClassLoader
+            }
         }
     }
 
@@ -63,15 +74,11 @@ internal class JUnit5RobolectricTestRunner(
         frameworkMethod: FrameworkMethod,
         bootstrappedMethod: Method,
     ) {
-        beforeTestLock().withLock {
+        beforeTestLock(testClass.javaClass).withLock {
             logger.trace { "runBeforeTest ${bootstrappedMethod.declaringClass.simpleName}::${bootstrappedMethod.name}" }
             super.beforeTest(sdkEnvironment, frameworkMethod, bootstrappedMethod)
         }
     }
-
-    private fun beforeTestLock(): Lock = beforeTestLocks.getOrPut(testClass.javaClass.outerMostDeclaringClass().name) {
-        ReentrantReadWriteLock()
-    }.writeLock()
 
     fun runAfterTest(frameworkMethod: FrameworkMethod, bootstrappedMethod: Method) {
         logger.trace { "runAfterTest ${frameworkMethod.declaringClass.simpleName}::${frameworkMethod.name}" }
@@ -125,10 +132,24 @@ internal class JUnit5RobolectricTestRunner(
 
     private companion object {
         private val beforeTestLocks = ConcurrentHashMap<String, ReentrantReadWriteLock>()
+        private val sdkSandboxParentClassLoaderCache = ConcurrentHashMap<String, ClassLoader>()
 
         private fun defaultInjectorBuilder() =
             defaultInjector().bind(SandboxBuilder::class.java, JUnit5RobolectricSandboxBuilder::class.java)
                 .bind(MavenDependencyResolver::class.java, JUnit5MavenDependencyResolver::class.java)
                 .bind(SandboxManager::class.java, JUnit5RobolectricSandboxManager::class.java)
+
+        private fun beforeTestLock(testClass: Class<*>): Lock =
+            beforeTestLocks.getOrPut(testClass.outerMostDeclaringClass().name) {
+                ReentrantReadWriteLock()
+            }.writeLock()
+
+        private fun createParentClassLoader(testClass: Class<*>) =
+            sdkSandboxParentClassLoaderCache.getOrPut(testClass.outerMostDeclaringClass().name) {
+                createLogger().trace {
+                    "parent class loader created for ${testClass.name.substringAfterLast('.')}"
+                }
+                SdkSandboxParentClassLoader(Thread.currentThread().contextClassLoader)
+            }
     }
 }

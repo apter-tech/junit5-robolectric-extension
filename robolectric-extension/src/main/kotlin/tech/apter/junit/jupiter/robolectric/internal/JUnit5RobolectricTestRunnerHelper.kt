@@ -3,8 +3,6 @@
 package tech.apter.junit.jupiter.robolectric.internal
 
 import com.google.common.annotations.VisibleForTesting
-import jdk.internal.loader.BuiltinClassLoader
-import jdk.internal.loader.URLClassPath
 import org.junit.jupiter.api.extension.InvocationInterceptor
 import org.junit.runners.model.FrameworkMethod
 import org.robolectric.annotation.Config
@@ -15,7 +13,6 @@ import tech.apter.junit.jupiter.robolectric.RobolectricExtension
 import tech.apter.junit.jupiter.robolectric.internal.extensions.createLogger
 import tech.apter.junit.jupiter.robolectric.internal.extensions.isExtendedWithRobolectric
 import tech.apter.junit.jupiter.robolectric.internal.extensions.isNestedTest
-import tech.apter.junit.jupiter.robolectric.internal.extensions.outerMostDeclaringClass
 import java.lang.reflect.Method
 import java.util.concurrent.Callable
 import java.util.concurrent.ConcurrentHashMap
@@ -94,14 +91,18 @@ internal class JUnit5RobolectricTestRunnerHelper private constructor(testClass: 
         val frameworkMethod = robolectricTestRunner.frameworkMethod(testMethod)
         val sdkEnvironment = sdkEnvironment(testMethod)
         logger.trace { "$sdkEnvironment afterEach(${testMethod.name})" }
-        sdkEnvironment.runOnMainThread(
-            Callable {
-                robolectricTestRunner.runAfterTest(frameworkMethod, testMethod)
-                sdkEnvironment.runWithRobolectric {
+        with(sdkEnvironment) {
+            runOnMainThread(
+                Callable {
+                    runWithRobolectric {
+                        robolectricTestRunner.runAfterTest(frameworkMethod, testMethod)
+                    }
+                    //  runWithRobolectricParent {
                     robolectricTestRunner.runFinallyAfterTest(frameworkMethod)
+                    //   }
                 }
-            }
-        )
+            )
+        }
     }
 
     fun proceedInvocation(testMethod: Method?, invocation: InvocationInterceptor.Invocation<Void>) {
@@ -118,7 +119,6 @@ internal class JUnit5RobolectricTestRunnerHelper private constructor(testClass: 
         @VisibleForTesting
         internal var interceptedClassLoader: ClassLoader? = null
         private val helperRunnerCache by lazy { ConcurrentHashMap<String, JUnit5RobolectricTestRunnerHelper>() }
-        private val appClassLoaderCache by lazy { ConcurrentHashMap<Class<*>, ClassLoader>() }
 
         internal fun setUp() {
             check(interceptedClassLoader == null) { "interceptedClassLoader is already set" }
@@ -138,7 +138,6 @@ internal class JUnit5RobolectricTestRunnerHelper private constructor(testClass: 
                 it.clearCachedRobolectricTestRunnerEnvironment()
             }
             helperRunnerCache.clear()
-            appClassLoaderCache.clear()
             Thread.currentThread().contextClassLoader = interceptedClassLoader
         }
 
@@ -147,43 +146,8 @@ internal class JUnit5RobolectricTestRunnerHelper private constructor(testClass: 
                 "Test class ${testClass.name} is not extended with ${RobolectricExtension::class.simpleName}"
             }
             return helperRunnerCache.getOrPut(testClass.name) {
-                val originalClassLoader = Thread.currentThread().contextClassLoader
-                val appClassLoader = appClassLoaderCache.getOrPut(testClass.outerMostDeclaringClass()) {
-                    createLogger().trace {
-                        "app class loader created for ${testClass.name.substringAfterLast('.')}"
-                    }
-                    createAppClassLoader(originalClassLoader)
-                }
-                // Make sure robolectric class loader's parent is a new appClassLoader
-                Thread.currentThread().contextClassLoader = appClassLoader
-                JUnit5RobolectricTestRunnerHelper(testClass).also {
-                    Thread.currentThread().contextClassLoader = originalClassLoader
-                }
+                JUnit5RobolectricTestRunnerHelper(testClass)
             }
-        }
-
-        private fun createAppClassLoader(originalClassLoader: ClassLoader): ClassLoader {
-            val builtinClassLoader = originalClassLoader as BuiltinClassLoader
-            val appClassLoaderClass = Class.forName("jdk.internal.loader.ClassLoaders\$AppClassLoader")
-            val constructor = appClassLoaderClass.getDeclaredConstructor(
-                BuiltinClassLoader::class.java,
-                URLClassPath::class.java
-            )
-            constructor.isAccessible = true
-            val instance = constructor.newInstance(
-                builtinClassLoader,
-                urlClassPath(builtinClassLoader)
-            ) as ClassLoader
-            constructor.isAccessible = false
-            return instance
-        }
-
-        private fun urlClassPath(builtinClassLoader: BuiltinClassLoader): URLClassPath {
-            val field = BuiltinClassLoader::class.java.getDeclaredField("ucp")
-            field.isAccessible = true
-            val ucp = field[builtinClassLoader] as URLClassPath
-            field.isAccessible = false
-            return ucp
         }
     }
 }
