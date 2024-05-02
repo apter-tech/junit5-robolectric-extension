@@ -13,9 +13,7 @@ import org.robolectric.util.inject.Injector
 import tech.apter.junit.jupiter.robolectric.RobolectricExtension
 import tech.apter.junit.jupiter.robolectric.internal.extensions.createLogger
 import tech.apter.junit.jupiter.robolectric.internal.extensions.hasTheSameParameterTypes
-import tech.apter.junit.jupiter.robolectric.internal.extensions.outerMostDeclaringClass
 import java.lang.reflect.Method
-import java.util.concurrent.ConcurrentHashMap
 
 internal data class TestClassContainer(val testClass: Class<*>)
 
@@ -123,6 +121,5 @@ internal class JUnit5RobolectricTestRunner(
             defaultInjector().bind(SandboxBuilder::class.java, JUnit5RobolectricSandboxBuilder::class.java)
                 .bind(MavenDependencyResolver::class.java, JUnit5MavenDependencyResolver::class.java)
                 .bind(SandboxManager::class.java, JUnit5RobolectricSandboxManager::class.java)
-
     }
 }
