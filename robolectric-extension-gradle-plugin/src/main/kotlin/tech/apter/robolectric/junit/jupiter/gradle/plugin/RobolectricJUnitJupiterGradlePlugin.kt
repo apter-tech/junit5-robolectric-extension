@@ -34,10 +34,6 @@ class RobolectricJUnitJupiterGradlePlugin : Plugin<Project> {
 
     private fun Project.setupTestTasks() {
         val jvmArgs = listOf(
-            "--add-exports",
-            "java.base/jdk.internal.loader=ALL-UNNAMED",
-            "--add-opens",
-            "java.base/jdk.internal.loader=ALL-UNNAMED",
             "-Djunit.platform.launcher.interceptors.enabled=true",
         )
         tasks.withType(Test::class.java).configureEach { testTask ->

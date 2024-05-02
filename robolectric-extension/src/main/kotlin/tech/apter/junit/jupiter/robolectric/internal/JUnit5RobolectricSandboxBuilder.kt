@@ -54,6 +54,9 @@ internal class JUnit5RobolectricSandboxBuilder @Inject constructor(
     ): SdkSandboxClassLoader {
         val outerMostDeclaringClassName = testClass.outerMostDeclaringClass().name
         return classLoaderCache.getOrPut(outerMostDeclaringClassName) {
+            check(Thread.currentThread().contextClassLoader is SdkSandboxParentClassLoader) {
+                "Current thread's contextClassLoader must be a ${SdkSandboxParentClassLoader::class.simpleName}"
+            }
             logger.debug {
                 "Create ${SdkSandboxClassLoader::class.simpleName}[$runtimeSdk] instance for ${
                     outerMostDeclaringClassName.substringAfterLast('.')
