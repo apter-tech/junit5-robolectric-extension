@@ -8,12 +8,15 @@ import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.api.parallel.Execution
+import org.junit.jupiter.api.parallel.ExecutionMode
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 
 @ExtendWith(RobolectricExtension::class)
+@Execution(ExecutionMode.CONCURRENT)
 class RobolectricExtensionDynamicSelfTest {
     @TestFactory
     fun generateDynamicTests() = testParameters.map { parameter ->

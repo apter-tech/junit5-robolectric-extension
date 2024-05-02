@@ -13,7 +13,7 @@ import kotlin.test.assertContains
 @ExtendWith(RobolectricExtension::class)
 @Config(qualifiers = "fr")
 @DisplayName("Given a test class with fr qualifier config")
-//@Execution(ExecutionMode.SAME_THREAD)
+@Execution(ExecutionMode.CONCURRENT)
 class RobolectricExtensionFrQualifierSelfTest {
     @Test
     fun `then runtime environment's qualifiers should contains fr`() {

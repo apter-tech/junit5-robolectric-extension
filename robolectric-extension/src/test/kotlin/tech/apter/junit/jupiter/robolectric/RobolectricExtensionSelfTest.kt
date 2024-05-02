@@ -30,7 +30,7 @@ import kotlin.test.assertTrue
 @ExtendWith(RobolectricExtension::class)
 @Config(application = RobolectricExtensionSelfTest.MyTestApplication::class)
 @DisplayName("Given a test class extended with robolectric")
-//@Execution(ExecutionMode.SAME_THREAD)
+@Execution(ExecutionMode.CONCURRENT)
 class RobolectricExtensionSelfTest {
     @Test
     fun shouldInitializeAndBindApplicationButNotCallOnCreate() {
