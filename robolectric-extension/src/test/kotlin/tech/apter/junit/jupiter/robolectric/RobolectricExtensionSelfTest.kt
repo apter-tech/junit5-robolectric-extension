@@ -13,6 +13,8 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Timeout
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.api.parallel.Execution
+import org.junit.jupiter.api.parallel.ExecutionMode
 import org.robolectric.RuntimeEnvironment
 import org.robolectric.annotation.Config
 import org.robolectric.util.ReflectionHelpers
@@ -84,6 +86,7 @@ class RobolectricExtensionSelfTest {
     @Nested
     @Config(qualifiers = "fr")
     @DisplayName("when nested test has fr res qualifier config")
+    @Execution(ExecutionMode.SAME_THREAD)
     inner class CustomQualifierSelfTest {
         @Test
         fun `then runtime environment's qualifiers should contains fr`() {
@@ -93,6 +96,7 @@ class RobolectricExtensionSelfTest {
 
     @Nested
     @DisplayName("when test nested")
+    @Execution(ExecutionMode.SAME_THREAD)
     inner class NestedSelfTest {
         @Test
         fun `then robolectric should be available`() {
