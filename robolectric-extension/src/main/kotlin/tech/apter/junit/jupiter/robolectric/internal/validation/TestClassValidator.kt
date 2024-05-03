@@ -37,7 +37,8 @@ internal object TestClassValidator {
                 val annotation = testClass.getAnnotation(annotationClass)
                 if (annotation != null) {
                     error(
-                        "${annotationClass.simpleName} annotation cannot be used on a nested test class: ${testClass.name}"
+                        "${annotationClass.simpleName} annotation cannot be used on a nested test class: " +
+                            testClass.name
                     )
                 }
             }

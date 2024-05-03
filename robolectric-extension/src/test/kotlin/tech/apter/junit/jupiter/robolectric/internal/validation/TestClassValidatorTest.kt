@@ -9,7 +9,9 @@ import kotlin.test.assertFails
 class TestClassValidatorTest {
     @Test
     fun `when nested class has annotation then validator should raise an error`() {
-        val failure = assertFails { TestClassValidator.validate(AnnotatedNestedJunitJupiterTest.InnerTests::class.java) }
+        val failure = assertFails {
+            TestClassValidator.validate(AnnotatedNestedJunitJupiterTest.InnerTests::class.java)
+        }
         assertContains(failure.localizedMessage, "GraphicsMode annotation cannot be used on a nested test class")
     }
 
