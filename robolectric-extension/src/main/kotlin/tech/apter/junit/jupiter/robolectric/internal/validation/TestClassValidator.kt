@@ -32,12 +32,15 @@ internal object TestClassValidator {
         testClass: Class<*>,
         vararg annotationsClasses: Class<out Annotation>,
     ) {
-        annotationsClasses.forEach { annotationClass ->
-            val annotation = testClass.getAnnotation(annotationClass)
-            if (annotation != null) {
-                error(
-                    "${annotationClass.simpleName} annotation cannot be used on a nested test class: ${testClass.name}"
-                )
+        if (testClass.isNestedTest) {
+            annotationsClasses.forEach { annotationClass ->
+                val annotation = testClass.getAnnotation(annotationClass)
+                if (annotation != null) {
+                    error(
+                        "${annotationClass.simpleName} annotation cannot be used on a nested test class: " +
+                            testClass.name
+                    )
+                }
             }
         }
     }
