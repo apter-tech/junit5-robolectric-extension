@@ -1,5 +1,10 @@
 # JUnit5 Robolectric Extension (Experimental)
 
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/apter-tech/junit5-robolectric-extension/build.yml?branch=main)](https://github.com/apter-tech/junit5-robolectric-extension/actions/workflows/build.yml?query=branch%3Amain)
+[![Maven Central Version](https://img.shields.io/maven-central/v/tech.apter.junit5.jupiter/robolectric-extension)](https://central.sonatype.com/search?q=tech.apter.junit5.jupiter)
+[![Gradle Plugin Portal Version](https://img.shields.io/gradle-plugin-portal/v/tech.apter.junit5.jupiter.robolectric-extension-gradle-plugin)](https://plugins.gradle.org/plugin/tech.apter.junit5.jupiter.robolectric-extension-gradle-plugin)
+[![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](https://www.apache.org/licenses/LICENSE-2.0)
+
 This is an experimental project that aims to bridge the gap between JUnit 5 and Robolectric,
 providing a way to run your Android unit tests using the modern JUnit 5 framework while leveraging
 Robolectric's in-memory environment.
