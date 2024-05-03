@@ -13,4 +13,8 @@ function publishGradlePlugin() {
   fi
 }
 
-publishGradlePlugin
+if [ -z "$JUNIT5_ROBOLECTRIC_EXTENSION_GRADLE_PLUGIN_PORTAL_KEY" ] || [ -z "$JUNIT5_ROBOLECTRIC_EXTENSION_GRADLE_PLUGIN_PORTAL_SECRET" ]; then
+  echo "publishGradlePlugin skipped. Set JUNIT5_ROBOLECTRIC_EXTENSION_GRADLE_PLUGIN_PORTAL_KEY and JUNIT5_ROBOLECTRIC_EXTENSION_GRADLE_PLUGIN_PORTAL_SECRET environment variables first."
+else
+  publishGradlePlugin
+fi

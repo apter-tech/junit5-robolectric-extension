@@ -6,7 +6,6 @@ plugins {
     alias(libs.plugins.dokka)
     alias(libs.plugins.kotlinxKover)
     id('maven-publish')
-    id('signing')
     alias(libs.plugins.gradlePluginPublish)
 }
 
