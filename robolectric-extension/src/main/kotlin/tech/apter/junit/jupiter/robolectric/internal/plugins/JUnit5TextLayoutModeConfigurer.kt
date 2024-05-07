@@ -3,7 +3,7 @@ package tech.apter.junit.jupiter.robolectric.internal.plugins
 import org.robolectric.annotation.TextLayoutMode
 import org.robolectric.plugins.PackagePropertiesLoader
 import org.robolectric.plugins.TextLayoutModeConfigurer
-import tech.apter.junit.jupiter.robolectric.internal.extensions.isNested
+import tech.apter.junit.jupiter.robolectric.internal.extensions.isNonStaticInnerClass
 import java.util.Properties
 
 internal class JUnit5TextLayoutModeConfigurer(
@@ -11,7 +11,7 @@ internal class JUnit5TextLayoutModeConfigurer(
     propertyFileLoader: PackagePropertiesLoader,
 ) : TextLayoutModeConfigurer(systemProperties, propertyFileLoader) {
     override fun getConfigFor(testClass: Class<*>): TextLayoutMode.Mode? {
-        return if (testClass.isNested) {
+        return if (testClass.isNonStaticInnerClass) {
             getConfigMergedWithDeclaringClassConfig(testClass)
         } else {
             super.getConfigFor(testClass)
@@ -20,7 +20,7 @@ internal class JUnit5TextLayoutModeConfigurer(
 
     private fun getConfigMergedWithDeclaringClassConfig(testClass: Class<*>): TextLayoutMode.Mode? {
         val config = super.getConfigFor(testClass)
-        return if (testClass.isNested) {
+        return if (testClass.isNonStaticInnerClass) {
             val parentConfig = getConfigMergedWithDeclaringClassConfig(testClass.declaringClass)
             config?.let { c -> return parentConfig?.let { p -> merge(p, c) } ?: c } ?: parentConfig
         } else {

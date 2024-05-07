@@ -3,6 +3,7 @@ package tech.apter.junit.jupiter.robolectric.internal.extensions
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.extension.ExtendWith
 import tech.apter.junit.jupiter.robolectric.RobolectricExtension
+import java.lang.reflect.Modifier
 
 internal fun Class<*>.isExtendedWithRobolectric(): Boolean {
     val isExtended = findAnnotations(ExtendWith::class.java).any { annotation ->
@@ -21,15 +22,15 @@ internal fun Class<*>.isExtendedWithRobolectric(): Boolean {
     }
 }
 
-internal inline val Class<*>.isNested: Boolean get() = declaringClass != null
-internal inline val Class<*>.isNestedTest: Boolean
-    get() = isNested && findAnnotations(type = Nested::class.java).isNotEmpty()
+internal inline val Class<*>.isNonStaticInnerClass: Boolean
+    get() = declaringClass != null && !Modifier.isStatic(modifiers)
+
+internal inline val Class<*>.isJUnit5NestedTest: Boolean
+    get() = isNonStaticInnerClass && findAnnotations(type = Nested::class.java).isNotEmpty()
 
 internal tailrec fun Class<*>.nearestOuterNestedTestOrOuterMostDeclaringClass(): Class<*> {
-    return if (declaringClass == null || isNestedTest) {
+    return if (declaringClass == null || isJUnit5NestedTest) {
         this
-    } else if (declaringClass.isNestedTest) {
-        declaringClass
     } else {
         declaringClass.nearestOuterNestedTestOrOuterMostDeclaringClass()
     }
