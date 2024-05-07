@@ -5,7 +5,7 @@ import org.junit.jupiter.api.parallel.ExecutionMode
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 import org.robolectric.annotation.LooperMode
-import tech.apter.junit.jupiter.robolectric.internal.extensions.isNestedTest
+import tech.apter.junit.jupiter.robolectric.internal.extensions.isJUnit5NestedTest
 
 internal object TestClassValidator {
 
@@ -23,7 +23,7 @@ internal object TestClassValidator {
 
     private fun validateNestedTestClassCanNotOverrideRuntimeSdk(testClass: Class<*>) {
         val config = testClass.getAnnotation(Config::class.java)
-        if (testClass.isNestedTest && config != null && config.sdk.isNotEmpty()) {
+        if (testClass.isJUnit5NestedTest && config != null && config.sdk.isNotEmpty()) {
             error("Robolectric runtime sdk cannot be used on nested test class: ${testClass.name}")
         }
     }
@@ -32,7 +32,7 @@ internal object TestClassValidator {
         testClass: Class<*>,
         vararg annotationsClasses: Class<out Annotation>,
     ) {
-        if (testClass.isNestedTest) {
+        if (testClass.isJUnit5NestedTest) {
             annotationsClasses.forEach { annotationClass ->
                 val annotation = testClass.getAnnotation(annotationClass)
                 if (annotation != null) {
@@ -55,8 +55,8 @@ internal object TestClassValidator {
     private fun validateTestWithNestedTestsCanNotBeExecutedConcurrently(
         testClass: Class<*>,
     ) {
-        fun Class<*>.isDeclaredNestedTestClasses() = declaredClasses.any { it.isNestedTest }
-        fun Class<*>.isConcurrent() =
+        fun Class<*>.isDeclaredJUnit5NestedTestClasses() = declaredClasses.any { it.isJUnit5NestedTest }
+        fun Class<*>.isConcurrentExecutionEnabled() =
             (
                 System.getProperty("junit.jupiter.execution.parallel.mode.classes.default") == "concurrent" &&
                     executionMode() != ExecutionMode.SAME_THREAD
@@ -64,7 +64,7 @@ internal object TestClassValidator {
                 executionMode() == ExecutionMode.CONCURRENT
 
         if (testClass.declaringClass == null) {
-            if (testClass.isDeclaredNestedTestClasses() && testClass.isConcurrent()) {
+            if (testClass.isDeclaredJUnit5NestedTestClasses() && testClass.isConcurrentExecutionEnabled()) {
                 error(
                     "${testClass.simpleName} must be annotated with @Execution(ExecutionMode.SAME_THREAD). " +
                         "Because it declared nested test classes. Or" +
@@ -75,7 +75,7 @@ internal object TestClassValidator {
     }
 
     private fun validateNestedTestCanNotBeExecutedConcurrently(testClass: Class<*>) {
-        if (testClass.isNestedTest && testClass.executionMode() == ExecutionMode.CONCURRENT) {
+        if (testClass.isJUnit5NestedTest && testClass.executionMode() == ExecutionMode.CONCURRENT) {
             error("Concurrent execution mode not allowed on test class: ${testClass.simpleName}")
         }
     }
