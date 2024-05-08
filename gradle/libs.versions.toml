@@ -16,7 +16,7 @@ kotlin = "1.9.23"
 kover = "0.7.6"
 robolectric = "4.12.1"
 robolectricAndroidAll = "14-robolectric-10818077"
-robolectricExtensionGradlePlugin = "0.5.0"
+robolectricExtensionGradlePlugin = "0.5.1"
 # Use when bom also added to the dependencies
 sources = "sources"
 
