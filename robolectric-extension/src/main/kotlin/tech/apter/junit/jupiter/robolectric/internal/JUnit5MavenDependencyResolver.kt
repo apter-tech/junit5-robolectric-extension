@@ -41,19 +41,19 @@ internal class JUnit5MavenDependencyResolver(
     )
 
     override fun getLocalArtifactUrls(vararg dependencies: DependencyJar): Array<URL?> {
-        val artifacts: MutableList<MavenJarArtifact> = ArrayList(dependencies.size)
+        val artifacts: List<Pair<DependencyJar, MavenJarArtifact>> = dependencies.map { it to MavenJarArtifact(it) }
 
-        for (dependencyJar in dependencies) {
-            whileLocked(dependencyJar) {
-                val artifact = MavenJarArtifact(dependencyJar)
-                artifacts.add(artifact)
-                mavenArtifactFetcher.fetchArtifact(artifact)
+        for ((dependencyJar, artifact) in artifacts) {
+            if (!File(localRepositoryDir, artifact.jarPath()).exists()) {
+                whileLocked(dependencyJar) {
+                    mavenArtifactFetcher.fetchArtifact(artifact)
+                }
             }
         }
         val urls = arrayOfNulls<URL>(dependencies.size)
         try {
             for (i in artifacts.indices) {
-                val artifact = artifacts[i]
+                val artifact = artifacts[i].second
                 urls[i] = File(localRepositoryDir, artifact.jarPath()).toURI().toURL()
             }
         } catch (e: MalformedURLException) {
