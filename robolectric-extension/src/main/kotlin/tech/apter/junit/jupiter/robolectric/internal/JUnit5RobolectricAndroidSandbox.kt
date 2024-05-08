@@ -15,6 +15,7 @@ internal class JUnit5RobolectricAndroidSandbox(
     compileSdk: Sdk,
     resourcesMode: ResourcesMode,
     apkLoader: ApkLoader,
+    @Suppress("VisibleForTests")
     testEnvironmentSpec: TestEnvironmentSpec,
     sdkSandboxClassLoader: SdkSandboxClassLoader,
     shadowProviders: ShadowProviders,
@@ -30,9 +31,9 @@ internal class JUnit5RobolectricAndroidSandbox(
     sqLiteMode,
 ) {
     override fun mainThreadFactory(): ThreadFactory {
-        return ThreadFactory { r: Runnable? ->
-            val name = "${createThreadId()}-SDK-${sdk.apiLevel}"
-            Thread(ThreadGroup(name), r, "Main-Thread-$name")
+        return ThreadFactory { r: Runnable ->
+            val name = "SDK ${sdk.apiLevel}"
+            Thread(ThreadGroup(name), r, "$name Main Thread ${createThreadId()}")
         }
     }
 
