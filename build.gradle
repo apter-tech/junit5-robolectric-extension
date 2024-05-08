@@ -10,7 +10,7 @@ allprojects {
 subprojects {
     configurations.configureEach {
         resolutionStrategy.dependencySubstitution {
-            substitute module("tech.apter.junit5.jupiter:robolectric-extension:$version") using project(':robolectric-extension')
+            substitute module("tech.apter.junit5.jupiter:robolectric-extension") using project(':robolectric-extension')
         }
     }
 }
