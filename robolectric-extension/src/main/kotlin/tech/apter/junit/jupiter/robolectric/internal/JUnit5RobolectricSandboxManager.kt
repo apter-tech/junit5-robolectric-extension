@@ -36,7 +36,6 @@ internal class JUnit5RobolectricSandboxManager @Inject constructor(
             instrumentationConfiguration = instrumentationConfig,
             sdk = sdk,
             resourcesMode = resourcesMode,
-            looperMode = looperMode,
             graphicsMode = graphicsMode,
         )
         // Return the same sandbox for nested tests
@@ -52,7 +51,6 @@ internal class JUnit5RobolectricSandboxManager @Inject constructor(
         private val instrumentationConfiguration: InstrumentationConfiguration,
         private val sdk: Sdk,
         private val resourcesMode: ResourcesMode,
-        private val looperMode: LooperMode.Mode,
         private val graphicsMode: GraphicsMode.Mode,
     )
 

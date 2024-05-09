@@ -56,7 +56,7 @@ internal class JUnit5RobolectricTestRunnerHelper private constructor(testClass: 
                     runWithRobolectric {
                         robolectricTestRunner.runAfterTest(frameworkMethod, testMethod)
                     }
-                    robolectricTestRunner.runFinallyAfterTest(frameworkMethod)
+                    robolectricTestRunner.runFinallyAfterTest(this, frameworkMethod)
                 }
             )
         }

@@ -15,11 +15,10 @@ Robolectric's in-memory environment.
 
 ## Current Limitations
 
-* **Parallel Execution:** Parallel test execution only supported with classes.
+* **Parallel Execution:** Parallel test execution only experimentally supported with classes.
 * **Configuration:**
     * Robolectric `@Config`'s sdk parameter annotation can only be set on outermost test class.
-    * `@ResourcesMode`, `@LooperMode`, `GraphicsMode` annotations can only be set on outermost test
-      class.
+    * `@GraphicsMode` annotations can only be set on outermost test class.
 * **Experimental Status:** This extension is still under development, and its API might change in
   future versions.
 

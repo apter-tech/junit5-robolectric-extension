@@ -60,11 +60,6 @@ class RobolectricExtensionSelfTest {
     }
 
     @Test
-    fun testMethod_shouldBeInvoked_onMainThread() {
-        assertSame(Thread.currentThread(), Looper.getMainLooper().thread)
-    }
-
-    @Test
     @Timeout(1000)
     fun whenTestHarnessUsesDifferentThread_shouldStillReportAsMainThread() {
         assertSame(Thread.currentThread(), Looper.getMainLooper().thread)
