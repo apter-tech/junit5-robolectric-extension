@@ -4,7 +4,6 @@ import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
-import org.robolectric.annotation.LooperMode
 import tech.apter.junit.jupiter.robolectric.internal.extensions.isJUnit5NestedTest
 
 internal object TestClassValidator {
@@ -16,7 +15,6 @@ internal object TestClassValidator {
         validateNestedTestClassCanNotOverrideRuntimeSdk(testClass)
         validateNestedTestClassCanNotApplyAnnotations(
             testClass,
-            LooperMode::class.java,
             GraphicsMode::class.java,
         )
     }

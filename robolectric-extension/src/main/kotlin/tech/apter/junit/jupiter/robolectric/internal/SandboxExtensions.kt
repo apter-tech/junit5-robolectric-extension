@@ -40,3 +40,34 @@ internal fun Sandbox.resetClassLoaderToOriginal() {
     }
     Thread.currentThread().contextClassLoader = robolectricClassLoader.parent
 }
+
+internal fun Sandbox.clearShadowLooperCache() {
+    val shadowLooperClass = robolectricClassLoader.loadClass("org.robolectric.shadows.ShadowLooper")
+    shadowLooperClass.getDeclaredMethod("clearLooperMode").invoke(null)
+}
+
+internal fun Sandbox.resetLooper() {
+    resetMainLooper()
+    resetMyLooper()
+}
+
+private fun Sandbox.resetMainLooper() {
+    val looperClass = robolectricClassLoader.loadClass("android.os.Looper")
+
+    @Suppress("DiscouragedPrivateApi")
+    val sMainLooperField = looperClass.getDeclaredField("sMainLooper")
+    sMainLooperField.isAccessible = true
+    sMainLooperField.set(null, null)
+    sMainLooperField.isAccessible = false
+}
+
+private fun Sandbox.resetMyLooper() {
+    val looperClass = robolectricClassLoader.loadClass("android.os.Looper")
+
+    @Suppress("DiscouragedPrivateApi")
+    val sThreadLocalField = looperClass.getDeclaredField("sThreadLocal")
+    sThreadLocalField.isAccessible = true
+    val threadLocal = (sThreadLocalField.get(null) as ThreadLocal<*>)
+    threadLocal.remove()
+    sThreadLocalField.isAccessible = false
+}

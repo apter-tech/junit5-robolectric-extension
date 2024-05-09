@@ -58,10 +58,8 @@ internal class JUnit5RobolectricTestRunner(
         frameworkMethod: FrameworkMethod,
         bootstrappedMethod: Method,
     ) {
-        synchronized(beforeTestLock) {
-            logger.trace { "runBeforeTest ${bootstrappedMethod.declaringClass.simpleName}::${bootstrappedMethod.name}" }
-            super.beforeTest(sdkEnvironment, frameworkMethod, bootstrappedMethod)
-        }
+        logger.trace { "runBeforeTest ${bootstrappedMethod.declaringClass.simpleName}::${bootstrappedMethod.name}" }
+        super.beforeTest(sdkEnvironment, frameworkMethod, bootstrappedMethod)
     }
 
     fun runAfterTest(frameworkMethod: FrameworkMethod, bootstrappedMethod: Method) {
@@ -69,9 +67,11 @@ internal class JUnit5RobolectricTestRunner(
         super.afterTest(frameworkMethod, bootstrappedMethod)
     }
 
-    fun runFinallyAfterTest(frameworkMethod: FrameworkMethod) {
+    fun runFinallyAfterTest(sdkEnvironment: Sandbox, frameworkMethod: FrameworkMethod) {
         logger.trace { "runFinallyAfterTest ${frameworkMethod.declaringClass.simpleName}::${frameworkMethod.name}" }
         super.finallyAfterTest(frameworkMethod)
+        sdkEnvironment.clearShadowLooperCache()
+        sdkEnvironment.resetLooper()
     }
 
     override fun createClassLoaderConfig(method: FrameworkMethod): InstrumentationConfiguration {
