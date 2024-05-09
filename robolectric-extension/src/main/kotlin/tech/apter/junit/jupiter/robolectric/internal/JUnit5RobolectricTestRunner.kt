@@ -115,8 +115,6 @@ internal class JUnit5RobolectricTestRunner(
     }
 
     internal companion object {
-        private val beforeTestLock = Any()
-
         private fun defaultInjectorBuilder() =
             defaultInjector().bind(SandboxBuilder::class.java, JUnit5RobolectricSandboxBuilder::class.java)
                 .bind(MavenDependencyResolver::class.java, JUnit5MavenDependencyResolver::class.java)
