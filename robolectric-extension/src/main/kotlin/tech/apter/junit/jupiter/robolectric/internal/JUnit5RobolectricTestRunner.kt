@@ -8,7 +8,7 @@ import org.robolectric.internal.SandboxManager.SandboxBuilder
 import org.robolectric.internal.SandboxTestRunner
 import org.robolectric.internal.bytecode.InstrumentationConfiguration
 import org.robolectric.internal.bytecode.Sandbox
-import org.robolectric.internal.dependency.MavenDependencyResolver
+import org.robolectric.internal.dependency.DependencyResolver
 import org.robolectric.util.inject.Injector
 import tech.apter.junit.jupiter.robolectric.RobolectricExtension
 import tech.apter.junit.jupiter.robolectric.internal.extensions.createLogger
@@ -117,7 +117,7 @@ internal class JUnit5RobolectricTestRunner(
     internal companion object {
         private fun defaultInjectorBuilder() =
             defaultInjector().bind(SandboxBuilder::class.java, JUnit5RobolectricSandboxBuilder::class.java)
-                .bind(MavenDependencyResolver::class.java, JUnit5MavenDependencyResolver::class.java)
+                .bind(DependencyResolver::class.java, JUnit5MavenDependencyResolver::class.java)
                 .bind(SandboxManager::class.java, JUnit5RobolectricSandboxManager::class.java)
     }
 }

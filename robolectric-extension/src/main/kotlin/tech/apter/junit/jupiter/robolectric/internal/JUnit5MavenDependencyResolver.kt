@@ -12,12 +12,12 @@ import java.net.MalformedURLException
 import java.net.URL
 import java.util.concurrent.ExecutorService
 
-internal class JUnit5MavenDependencyResolver(
+internal class JUnit5MavenDependencyResolver private constructor(
     repositoryUrl: String,
     repositoryId: String,
-    repositoryUserName: String,
-    repositoryPassword: String,
-    proxyHost: String,
+    repositoryUserName: String?,
+    repositoryPassword: String?,
+    proxyHost: String?,
     proxyPort: Int,
 ) : MavenDependencyResolver(repositoryUrl, repositoryId, repositoryUserName, repositoryPassword, proxyHost, proxyPort) {
     constructor() : this(
