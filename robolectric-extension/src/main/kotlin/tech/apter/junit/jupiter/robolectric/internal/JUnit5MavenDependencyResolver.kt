@@ -12,12 +12,12 @@ import java.net.MalformedURLException
 import java.net.URL
 import java.util.concurrent.ExecutorService
 
-internal class JUnit5MavenDependencyResolver(
+internal class JUnit5MavenDependencyResolver private constructor(
     repositoryUrl: String,
     repositoryId: String,
-    repositoryUserName: String,
-    repositoryPassword: String,
-    proxyHost: String,
+    repositoryUserName: String?,
+    repositoryPassword: String?,
+    proxyHost: String?,
     proxyPort: Int,
 ) : MavenDependencyResolver(repositoryUrl, repositoryId, repositoryUserName, repositoryPassword, proxyHost, proxyPort) {
     constructor() : this(
@@ -39,6 +39,26 @@ internal class JUnit5MavenDependencyResolver(
         localRepositoryDir,
         executorService,
     )
+
+    override fun createMavenFetcher(
+        repositoryUrl: String,
+        repositoryUserName: String?,
+        repositoryPassword: String?,
+        proxyHost: String?,
+        proxyPort: Int,
+        localRepositoryDir: File,
+        executorService: ExecutorService
+    ): MavenArtifactFetcher {
+        return JUnit5RobolectricMavenArtifactFetcher(
+            repositoryUrl,
+            repositoryUserName,
+            repositoryPassword,
+            proxyHost,
+            proxyPort,
+            localRepositoryDir,
+            executorService
+        )
+    }
 
     override fun getLocalArtifactUrls(vararg dependencies: DependencyJar): Array<URL?> {
         val artifacts: List<Pair<DependencyJar, MavenJarArtifact>> = dependencies.map { it to MavenJarArtifact(it) }

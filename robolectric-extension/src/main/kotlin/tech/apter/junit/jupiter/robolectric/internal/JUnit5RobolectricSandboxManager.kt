@@ -36,7 +36,6 @@ internal class JUnit5RobolectricSandboxManager @Inject constructor(
             instrumentationConfiguration = instrumentationConfig,
             sdk = sdk,
             resourcesMode = resourcesMode,
-            graphicsMode = graphicsMode,
         )
         // Return the same sandbox for nested tests
         return sandboxCache.getOrPut(key) {
@@ -51,7 +50,6 @@ internal class JUnit5RobolectricSandboxManager @Inject constructor(
         private val instrumentationConfiguration: InstrumentationConfiguration,
         private val sdk: Sdk,
         private val resourcesMode: ResourcesMode,
-        private val graphicsMode: GraphicsMode.Mode,
     )
 
     private companion object {
