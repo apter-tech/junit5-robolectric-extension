@@ -22,8 +22,8 @@ class JUnit5RobolectricSandboxBuilderTest {
     fun `Given the same arguments when call build twice then should return two different sandboxes with the same classloader `() {
         // Given
         val instrumentationConfiguration = createInstrumentationConfiguration()
-        val runtimeSdk: Sdk = TestUtil.sdkCollection.getSdk(34)
-        val compileSdk: Sdk = TestUtil.sdkCollection.getSdk(34)
+        val runtimeSdk: Sdk = TestUtil.sdkCollection.getSdk(33)
+        val compileSdk: Sdk = TestUtil.sdkCollection.getSdk(33)
         val resourcesMode: ResourcesMode = ResourcesMode.BINARY
         val sqLiteMode: SQLiteMode.Mode = SQLiteMode.Mode.NATIVE
 
@@ -45,11 +45,11 @@ class JUnit5RobolectricSandboxBuilderTest {
     fun `Given different arguments when call build twice then should return two different sandboxes with different classloaders`() {
         // Given
         val instrumentationConfiguration1 = createInstrumentationConfiguration()
-        val runtimeSdk1: Sdk = TestUtil.sdkCollection.getSdk(34)
-        val compileSdk1: Sdk = TestUtil.sdkCollection.getSdk(34)
+        val runtimeSdk1: Sdk = TestUtil.sdkCollection.getSdk(33)
+        val compileSdk1: Sdk = TestUtil.sdkCollection.getSdk(33)
         val instrumentationConfiguration2 = createInstrumentationConfiguration()
-        val runtimeSdk2: Sdk = TestUtil.sdkCollection.getSdk(33)
-        val compileSdk2: Sdk = TestUtil.sdkCollection.getSdk(33)
+        val runtimeSdk2: Sdk = TestUtil.sdkCollection.getSdk(32)
+        val compileSdk2: Sdk = TestUtil.sdkCollection.getSdk(32)
         val resourcesMode: ResourcesMode = ResourcesMode.BINARY
         val sqLiteMode: SQLiteMode.Mode = SQLiteMode.Mode.NATIVE
 

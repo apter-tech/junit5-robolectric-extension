@@ -17,7 +17,7 @@ configurations.configureEach { configuration ->
 }
 
 kotlin {
-    jvmToolchain(libs.versions.jvmToolchain.get().toInteger())
+    jvmToolchain(libs.versions.jvmToolchainMin.get().toInteger())
 }
 
 robolectricJUnitJupiter {

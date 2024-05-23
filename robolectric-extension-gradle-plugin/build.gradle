@@ -17,7 +17,7 @@ buildConfig {
 }
 
 kotlin {
-    jvmToolchain(libs.versions.jvmToolchain.get().toInteger())
+    jvmToolchain(libs.versions.jvmToolchainMin.get().toInteger())
 }
 
 detekt {
@@ -33,12 +33,12 @@ dependencies {
     detektPlugins(libs.detektFormatting)
     detektPlugins(libs.detektRulesLibraries)
     compileOnly(gradleApi())
-    compileOnly(libs.androidGradle)
+    compileOnly(libs.androidGradleJdk11)
     testImplementation(gradleTestKit())
     testImplementation(platform(libs.junit5Bom))
     testImplementation(libs.junit5JupiterApi)
     testImplementation(libs.kotlinTestJUnit5)
-    testImplementation(libs.androidGradle)
+    testImplementation(libs.androidGradleJdk11)
     testRuntimeOnly(libs.junit5JupiterEngine)
 }
 
