@@ -1,7 +1,7 @@
 [versions]
 androidBuildTools = "34.0.0"
 androidCompileSdk = "34"
-androidGradle = "8.4.0"
+androidGradle = "8.4.1"
 androidMinimumSdk = "14"
 androidxTestExtJunit = "1.1.5"
 buildConfig = "5.3.5"
@@ -15,15 +15,15 @@ jvmToolchainMin = "11"
 jvmToolchain = "17"
 kotlin = "1.9.24"
 kover = "0.8.0"
-robolectric = "4.12.1"
+robolectric = "4.12.2"
 robolectricAndroidAll = "13-robolectric-9030017"
-robolectricExtensionGradlePlugin = "0.6.1"
+robolectricExtensionGradlePlugin = "0.7.0"
 # Use when bom also added to the dependencies
 sources = "sources"
 
 [libraries]
 androidGradle = { module = "com.android.tools.build:gradle", version.ref = "androidGradle" }
-androidGradleJdk11 = { module = "com.android.tools.build:gradle", version.require = "7.0.4" }
+androidGradleJdk11 = { module = "com.android.tools.build:gradle", version.require = "7.4.2" }
 androidxTestExtJunit = { module = "androidx.test.ext:junit", version.ref = "androidxTestExtJunit" }
 detektFormatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
 detektRulesLibraries = { module = "io.gitlab.arturbosch.detekt:detekt-rules-libraries", version.ref = "detekt" }
