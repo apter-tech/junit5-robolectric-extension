@@ -52,7 +52,7 @@ class RobolectricJUnitJupiterGradlePlugin : Plugin<Project> {
     }
 
     private fun Project.enableIncludeAndroidResources() {
-        val androidExtension = extensions.findByName("android") as? CommonExtension<*, *, *, *, *, *>
+        val androidExtension = extensions.findByName("android") as? CommonExtension<*, *, *, *>
         @Suppress("UnstableApiUsage")
         androidExtension?.testOptions?.unitTests?.isIncludeAndroidResources = true
     }

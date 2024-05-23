@@ -17,7 +17,7 @@ dependencies {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(libs.versions.jvmToolchain.get()))
+        languageVersion.set(JavaLanguageVersion.of(libs.versions.jvmToolchainMin.get()))
     }
 }
 

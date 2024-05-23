@@ -11,17 +11,19 @@ gradlePluginPublish = "1.2.1"
 guava = "33.2.0-jre"
 junit4 = "4.13.2"
 junit5 = "5.10.2"
+jvmToolchainMin = "11"
 jvmToolchain = "17"
 kotlin = "1.9.24"
 kover = "0.8.0"
 robolectric = "4.12.1"
-robolectricAndroidAll = "14-robolectric-10818077"
+robolectricAndroidAll = "13-robolectric-9030017"
 robolectricExtensionGradlePlugin = "0.6.1"
 # Use when bom also added to the dependencies
 sources = "sources"
 
 [libraries]
 androidGradle = { module = "com.android.tools.build:gradle", version.ref = "androidGradle" }
+androidGradleJdk11 = { module = "com.android.tools.build:gradle", version.require = "7.0.4" }
 androidxTestExtJunit = { module = "androidx.test.ext:junit", version.ref = "androidxTestExtJunit" }
 detektFormatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
 detektRulesLibraries = { module = "io.gitlab.arturbosch.detekt:detekt-rules-libraries", version.ref = "detekt" }
