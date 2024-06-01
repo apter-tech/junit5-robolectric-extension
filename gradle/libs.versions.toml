@@ -23,7 +23,7 @@ sources = "sources"
 
 [libraries]
 androidGradle = { module = "com.android.tools.build:gradle", version.ref = "androidGradle" }
-androidGradleJdk11 = { module = "com.android.tools.build:gradle", version.require = "7.4.2" }
+androidGradleJdk11 = { module = "com.android.tools.build:gradle", version.require = "8.4.1" }
 androidxTestExtJunit = { module = "androidx.test.ext:junit", version.ref = "androidxTestExtJunit" }
 detektFormatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
 detektRulesLibraries = { module = "io.gitlab.arturbosch.detekt:detekt-rules-libraries", version.ref = "detekt" }
