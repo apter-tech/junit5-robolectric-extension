@@ -33,12 +33,12 @@ dependencies {
     detektPlugins(libs.detektFormatting)
     detektPlugins(libs.detektRulesLibraries)
     compileOnly(gradleApi())
-    compileOnly(libs.androidGradleJdk11)
+    compileOnly(libs.androidGradleJava11)
     testImplementation(gradleTestKit())
     testImplementation(platform(libs.junit5Bom))
     testImplementation(libs.junit5JupiterApi)
     testImplementation(libs.kotlinTestJUnit5)
-    testImplementation(libs.androidGradleJdk11)
+    testImplementation(libs.androidGradleJava11)
     testRuntimeOnly(libs.junit5JupiterEngine)
 }
 

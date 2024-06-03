@@ -16,14 +16,13 @@ jvmToolchain = "17"
 kotlin = "2.0.0"
 kover = "0.8.0"
 robolectric = "4.12.2"
-robolectricAndroidAll = "13-robolectric-9030017"
 robolectricExtensionGradlePlugin = "0.7.0"
 # Use when bom also added to the dependencies
 sources = "sources"
 
 [libraries]
 androidGradle = { module = "com.android.tools.build:gradle", version.ref = "androidGradle" }
-androidGradleJdk11 = { module = "com.android.tools.build:gradle", version.require = "7.4.2" }
+androidGradleJava11 = { module = "com.android.tools.build:gradle", version = { require = "[7.0.0,8.0.0[", prefer = "7.4.2" } }
 androidxTestExtJunit = { module = "androidx.test.ext:junit", version.ref = "androidxTestExtJunit" }
 detektFormatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
 detektRulesLibraries = { module = "io.gitlab.arturbosch.detekt:detekt-rules-libraries", version.ref = "detekt" }
@@ -38,7 +37,8 @@ junit5PlatformLauncher = { module = "org.junit.platform:junit-platform-launcher"
 kotlinTestJUnit5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5", version.ref = "kotlin" }
 kotlinReflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
 robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
-robolectricAndroidAll = { module = "org.robolectric:android-all", version.ref = "robolectricAndroidAll" }
+# Latest version built with Java 11
+robolectricAndroidAllJava11 = { module = "org.robolectric:android-all", version = { require = "[7.0.0_r1-robolectric-r1,13-robolectric-9030017]", prefer = "13-robolectric-9030017" } }
 
 [plugins]
 androidLibrary = { id = "com.android.library", version.ref = "androidGradle" }

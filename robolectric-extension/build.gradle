@@ -57,7 +57,7 @@ dependencies {
             ' vulnerability with High severity found'
     }
     implementation(libs.kotlinReflect)
-    testImplementation(libs.robolectricAndroidAll)
+    testImplementation(libs.robolectricAndroidAllJava11)
     testImplementation(libs.junit4)
     testImplementation(libs.androidxTestExtJunit)
     testImplementation(libs.kotlinTestJUnit5)
