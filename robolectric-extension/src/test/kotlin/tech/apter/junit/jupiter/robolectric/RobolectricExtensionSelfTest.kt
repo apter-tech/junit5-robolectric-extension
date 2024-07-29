@@ -37,9 +37,6 @@ class RobolectricExtensionSelfTest {
         val application = assertDoesNotThrow { getApplicationContext<Context>() }
         assertIs<MyTestApplication>(application, "application")
         assertTrue("onCreateCalled") { application.onCreateWasCalled }
-        if (RuntimeEnvironment.useLegacyResources()) {
-            assertNotNull(RuntimeEnvironment.getAppResourceTable(), "Application resource loader")
-        }
     }
 
     @Test

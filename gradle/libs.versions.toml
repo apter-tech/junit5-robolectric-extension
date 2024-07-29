@@ -1,8 +1,9 @@
 [versions]
 androidBuildTools = "34.0.0"
+androidToolsCommon = "31.5.1"
 androidCompileSdk = "34"
 androidGradle = "8.5.1"
-androidMinimumSdk = "14"
+androidMinimumSdk = "19"
 androidxTestExtJunit = "1.2.1"
 buildConfig = "5.4.0"
 detekt = "1.23.6"
@@ -21,8 +22,9 @@ robolectricExtensionGradlePlugin = "0.7.0"
 sources = "sources"
 
 [libraries]
-androidGradle = { module = "com.android.tools.build:gradle", version.ref = "androidGradle" }
+androidGradleApi = { module = "com.android.tools.build:gradle-api", version.ref = "androidGradle" }
 androidGradleJava11 = { module = "com.android.tools.build:gradle", version = { require = "[7.0.0,8.0.0[", prefer = "7.4.2" } }
+androidToolsCommon = { module = "com.android.tools:common", version.ref = "androidToolsCommon" }
 androidxTestExtJunit = { module = "androidx.test.ext:junit", version.ref = "androidxTestExtJunit" }
 detektFormatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
 detektRulesLibraries = { module = "io.gitlab.arturbosch.detekt:detekt-rules-libraries", version.ref = "detekt" }
