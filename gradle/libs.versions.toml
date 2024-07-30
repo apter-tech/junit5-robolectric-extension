@@ -14,7 +14,7 @@ junit5 = "5.10.2"
 jvmToolchainMin = "11"
 jvmToolchain = "17"
 kotlin = "2.0.0"
-kover = "0.8.0"
+kover = "0.8.3"
 robolectric = "4.12.2"
 robolectricExtensionGradlePlugin = "0.7.0"
 # Use when bom also added to the dependencies
