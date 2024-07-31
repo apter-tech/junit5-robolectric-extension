@@ -63,7 +63,8 @@ internal class JUnit5MavenDependencyResolver private constructor(
     }
 
     private fun createLockFile(dependencyJar: DependencyJar): File {
-        return File(System.getProperty("user.home"), "${dependencyJar.shortName}.lock")
+        val lockFileName = dependencyJar.shortName.replace(SPECIAL_CHARACTERS_IN_FILE_NAME_REGEX.toRegex(), "_")
+        return File(System.getProperty("user.home"), "$lockFileName.lock")
     }
 
     @Suppress("NestedBlockDepth")
@@ -82,5 +83,9 @@ internal class JUnit5MavenDependencyResolver private constructor(
         } finally {
             lockFile.delete()
         }
+    }
+
+    private companion object {
+        private const val SPECIAL_CHARACTERS_IN_FILE_NAME_REGEX = """[<>:"\\/|\?\*]"""
     }
 }
