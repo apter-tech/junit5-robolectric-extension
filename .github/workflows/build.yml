@@ -57,6 +57,14 @@ jobs:
           JUNIT5_ROBOLECTRIC_EXTENSION_GRADLE_PLUGIN_PORTAL_SECRET: '${{ secrets.JUNIT5_ROBOLECTRIC_EXTENSION_GRADLE_PLUGIN_PORTAL_SECRET }}'
           JUNIT5_ROBOLECTRIC_EXTENSION_GPG_SIGNING_KEY: '${{ secrets.JUNIT5_ROBOLECTRIC_EXTENSION_GPG_SIGNING_KEY }}'
           JUNIT5_ROBOLECTRIC_EXTENSION_GPG_SIGNING_PASSWORD: '${{ secrets.JUNIT5_ROBOLECTRIC_EXTENSION_GPG_SIGNING_PASSWORD }}'
+      - name: Upload unit test report
+        uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
+        with:
+          name: unit-test-report
+          path: |
+            ${{ github.workspace }}/**/build/reports/tests
+            ${{ github.workspace }}/**/build/test-results
+          retention-days: 5
       - name: Upload coverage report
         uses: actions/upload-artifact@0b2256b8c012f0828dc542b3febcab082c67f72b # v4.3.4
         if: ${{ hashFiles('build/reports/kover/report.xml') != '' }}
@@ -85,6 +93,25 @@ jobs:
           GIT_USER_NAME: ${{ github.actor }}
           GIT_USER_EMAIL: ${{ github.actor_id }}+${{ github.actor }}@users.noreply.github.com
           RELEASE_VERSION: ${{ github.event.inputs.releaseVersion }}
+  junit:
+    runs-on: ubuntu-22.04
+    needs:
+      - build
+    permissions:
+      actions: read
+      checks: write
+      contents: read
+    if: github.repository == 'apter-tech/junit5-robolectric-extension' && github.event_name == 'pull_request'
+    steps:
+      - name: Download unit test report
+        uses: actions/download-artifact@65a9edc5881444af0b9093a5e628f2fe47ea3b2e # v4.1.7
+        with:
+          name: unit-test-report
+      - name: Comment unit test report
+        if: ${{ hashFiles('**/test-results/**/*.xml') != '' }}
+        uses: mikepenz/action-junit-report@db71d41eb79864e25ab0337e395c352e84523afe # v4.3.1
+        with:
+          report_paths: '**/test-results/**/*.xml'
   kover:
     runs-on: ubuntu-22.04
     needs:
