@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.library")
+    alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.kotlinxKover)
     alias(libs.plugins.detekt)

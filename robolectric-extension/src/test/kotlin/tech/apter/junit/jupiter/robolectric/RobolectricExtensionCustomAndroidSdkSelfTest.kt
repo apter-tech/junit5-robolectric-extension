@@ -12,21 +12,21 @@ import kotlin.test.assertEquals
 import kotlin.test.assertSame
 
 @ExtendWith(RobolectricExtension::class)
-@Config(sdk = [Build.VERSION_CODES.KITKAT])
+@Config(sdk = [Build.VERSION_CODES.LOLLIPOP])
 @Execution(ExecutionMode.SAME_THREAD)
 class RobolectricExtensionCustomAndroidSdkSelfTest {
     @Test
     fun `Given a test class configured with custom runtime SDK then SDK_INT should be the version set up`() {
-        assertEquals(Build.VERSION_CODES.KITKAT, Build.VERSION.SDK_INT)
-        assertEquals("4.4", Build.VERSION.RELEASE)
+        assertEquals(Build.VERSION_CODES.LOLLIPOP, Build.VERSION.SDK_INT)
+        assertEquals("5.0.2", Build.VERSION.RELEASE)
     }
 
     @Nested
     inner class NestedSelfTest {
         @Test
         fun `Given a test class configured with custom runtime SDK when call test from a nested test class then SDK_INT should be the version set up`() {
-            assertEquals(Build.VERSION_CODES.KITKAT, Build.VERSION.SDK_INT)
-            assertEquals("4.4", Build.VERSION.RELEASE)
+            assertEquals(Build.VERSION_CODES.LOLLIPOP, Build.VERSION.SDK_INT)
+            assertEquals("5.0.2", Build.VERSION.RELEASE)
         }
 
         @Test
@@ -38,8 +38,8 @@ class RobolectricExtensionCustomAndroidSdkSelfTest {
         inner class TwoLevelNestedSelfTest {
             @Test
             fun `Given a test class configured with custom runtime SDK when call test from a nested test class then SDK_INT should be the version set up`() {
-                assertEquals(Build.VERSION_CODES.KITKAT, Build.VERSION.SDK_INT)
-                assertEquals("4.4", Build.VERSION.RELEASE)
+                assertEquals(Build.VERSION_CODES.LOLLIPOP, Build.VERSION.SDK_INT)
+                assertEquals("5.0.2", Build.VERSION.RELEASE)
             }
 
             @Test

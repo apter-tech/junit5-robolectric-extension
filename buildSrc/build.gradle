@@ -12,7 +12,8 @@ dependencies {
     compileOnly(gradleApi())
     compileOnly(localGroovy())
     implementation(libs.guava)
-    implementation(libs.androidGradle)
+    implementation(libs.androidGradleApi)
+    implementation(libs.androidToolsCommon)
 }
 
 java {
@@ -22,18 +23,33 @@ java {
 }
 
 task downloadAarDepsPlugin {
-    final from = "https://raw.githubusercontent.com/robolectric/robolectric/robolectric-${libs.versions.robolectric.get()}/buildSrc/src/main/groovy/org/robolectric/gradle/AarDepsPlugin.java"
+    final baseUrl = "https://raw.githubusercontent.com/robolectric/robolectric/robolectric-${libs.versions.robolectric.get()}/"
+    final from = [
+        "${baseUrl}buildSrc/src/main/groovy/org/robolectric/gradle/AarDepsPlugin.java",
+        "${baseUrl}buildSrc/src/main/groovy/org/robolectric/gradle/agp/ExtractAarTransform.java",
+        "${baseUrl}buildSrc/src/main/groovy/org/robolectric/gradle/agp/GenericTransformParameters.java",
+
+    ]
     final groovySourceSet = sourceSets.named('main').get().allSource.sourceDirectories.find { it.name == 'groovy' } as File
-    final to = new File(groovySourceSet, '/org/robolectric/gradle/AarDepsPlugin.java')
+    final to = [
+        new File(groovySourceSet, '/org/robolectric/gradle/AarDepsPlugin.java'),
+        new File(groovySourceSet, '/org/robolectric/gradle/agp/ExtractAarTransform.java'),
+        new File(groovySourceSet, '/org/robolectric/gradle/agp/GenericTransformParameters.java'),
+    ]
+
 
     inputs.property("from", from)
-    outputs.file(to)
+    outputs.files(to)
 
     doLast {
-        try {
-            new URL(from).withInputStream { i -> to.withOutputStream { it << i } }
-        } catch (IOException e) {
-            logger.debug("Error during downloading AarDepsPlugin. Keep the stored version.\n$e")
+        from.indices.forEach { i ->
+            final url = from[i]
+            final targetFile = to[i]
+            try {
+                new URL(url).withInputStream { inputStream -> targetFile.withOutputStream { it << inputStream } }
+            } catch (IOException e) {
+                logger.debug("Error during downloading ${url.name}. Keep the stored version.\n$e")
+            }
         }
     }
 }
