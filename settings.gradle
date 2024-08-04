@@ -20,7 +20,7 @@ dependencyResolutionManagement {
 
 rootProject.name = 'junit5-robolectric-extension'
 include('integration-tests:agp-groovy-dsl')
-//include('integration-tests:agp-kotlin-dsl')
+include('integration-tests:agp-kotlin-dsl')
 include('robolectric-extension')
 include('robolectric-extension-gradle-plugin')
 
