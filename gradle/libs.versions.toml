@@ -23,6 +23,7 @@ sources = "sources"
 
 [libraries]
 androidGradleApi = { module = "com.android.tools.build:gradle-api", version.ref = "androidGradle" }
+androidGradle = { module = "com.android.tools.build:gradle", version.ref = "androidGradle" }
 androidGradleJava11 = { module = "com.android.tools.build:gradle", version = { require = "[7.0.0,8.0.0[", prefer = "7.4.2" } }
 androidToolsCommon = { module = "com.android.tools:common", version.ref = "androidToolsCommon" }
 androidxTestExtJunit = { module = "androidx.test.ext:junit", version.ref = "androidxTestExtJunit" }
