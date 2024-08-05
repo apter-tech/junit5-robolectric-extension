@@ -1,0 +1,37 @@
+plugins {
+    alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.kotlinAndroid)
+    alias(libs.plugins.kotlinxKover)
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.robolectricExtensionGradlePlugin)
+}
+
+android {
+    namespace = 'tech.apter.junit.jupiter.robolectric.integration.tests.agp.groovy.dsl'
+    compileSdk = libs.versions.androidCompileSdkJava11.get().toInteger()
+    buildToolsVersion = libs.versions.androidBuildTools.get()
+
+    defaultConfig {
+        minSdk = libs.versions.androidMinimumSdk.get().toInteger()
+    }
+
+    testOptions {
+        unitTests.all { Test test ->
+            test.systemProperty('robolectric.enabledSdks', '19, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33')
+        }
+    }
+}
+
+detekt {
+    toolVersion = libs.versions.detekt.get()
+    autoCorrect = true
+}
+
+kotlin {
+    jvmToolchain(libs.versions.jvmToolchainMin.get().toInteger())
+}
+
+dependencies {
+    detektPlugins(libs.detektFormatting)
+    detektPlugins(libs.detektRulesLibraries)
+}
