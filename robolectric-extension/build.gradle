@@ -39,6 +39,14 @@ test {
     systemProperty 'robolectric.usePreinstrumentedJars', 'true'
 }
 
+tasks.test {
+    javaLauncher.set(
+        javaToolchains.launcherFor {
+            languageVersion.set(JavaLanguageVersion.of(libs.versions.jvmToolchain.get().toInteger()))
+        }
+    )
+}
+
 detekt {
     toolVersion = libs.versions.detekt.get()
     autoCorrect true

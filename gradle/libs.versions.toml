@@ -2,6 +2,7 @@
 androidBuildTools = "34.0.0"
 androidToolsCommon = "31.5.1"
 androidCompileSdk = "34"
+androidCompileSdkJava11 = "33"
 androidGradle = "8.5.1"
 androidMinimumSdk = "19"
 androidxTestExtJunit = "1.2.1"
@@ -23,7 +24,6 @@ sources = "sources"
 
 [libraries]
 androidGradleApi = { module = "com.android.tools.build:gradle-api", version.ref = "androidGradle" }
-androidGradle = { module = "com.android.tools.build:gradle", version.ref = "androidGradle" }
 androidGradleJava11 = { module = "com.android.tools.build:gradle", version = { require = "[7.0.0,8.0.0[", prefer = "7.4.2" } }
 androidToolsCommon = { module = "com.android.tools:common", version.ref = "androidToolsCommon" }
 androidxTestExtJunit = { module = "androidx.test.ext:junit", version.ref = "androidxTestExtJunit" }
