@@ -34,12 +34,27 @@ test {
     systemProperty 'junit.jupiter.execution.parallel.enabled', 'true'
     systemProperty 'junit.jupiter.execution.parallel.mode.default', 'same_thread'
     systemProperty 'junit.jupiter.execution.parallel.mode.classes.default', 'same_thread'
-    systemProperty 'java.util.logging.config.file',
-        "${projectDir}/src/test/resources/logging.properties"
+    systemProperty 'java.util.logging.config.file', "${projectDir}/src/test/resources/logging.properties"
     systemProperty 'robolectric.usePreinstrumentedJars', 'true'
 }
 
-tasks.test {
+task concurrentTest(type: Test) {
+    testLogging {
+        showStandardStreams = true
+        showExceptions = true
+        showCauses = true
+        showStackTraces = true
+    }
+    systemProperty 'junit.jupiter.execution.parallel.enabled', 'true'
+    systemProperty 'junit.jupiter.execution.parallel.mode.default', 'same_thread'
+    systemProperty 'junit.jupiter.execution.parallel.mode.classes.default', 'concurrent'
+    systemProperty 'java.util.logging.config.file', "${projectDir}/src/test/resources/logging.properties"
+    systemProperty 'robolectric.usePreinstrumentedJars', 'true'
+}
+
+check.dependsOn(concurrentTest)
+
+tasks.withType(Test.class).configureEach {
     javaLauncher.set(
         javaToolchains.launcherFor {
             languageVersion.set(JavaLanguageVersion.of(libs.versions.jvmToolchain.get().toInteger()))
