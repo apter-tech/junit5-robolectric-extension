@@ -1,5 +1,3 @@
-@file:Suppress("JAVA_MODULE_DOES_NOT_EXPORT_PACKAGE")
-
 package tech.apter.junit.jupiter.robolectric.internal
 
 import com.google.common.annotations.VisibleForTesting
