@@ -5,7 +5,6 @@ import org.robolectric.internal.dependency.DependencyJar
 import org.robolectric.internal.dependency.MavenArtifactFetcher
 import org.robolectric.internal.dependency.MavenDependencyResolver
 import org.robolectric.internal.dependency.MavenJarArtifact
-import tech.apter.junit.jupiter.robolectric.internal.extensions.createLogger
 import java.io.File
 import java.io.IOException
 import java.io.RandomAccessFile
@@ -24,6 +23,7 @@ internal class JUnit5MavenDependencyResolver private constructor(
     proxyHost: String?,
     proxyPort: Int,
 ) : MavenDependencyResolver(repositoryUrl, repositoryId, repositoryUserName, repositoryPassword, proxyHost, proxyPort) {
+    @Suppress("unused")
     constructor() : this(
         MavenRoboSettings.getMavenRepositoryUrl(),
         MavenRoboSettings.getMavenRepositoryId(),
@@ -99,30 +99,6 @@ internal class JUnit5MavenDependencyResolver private constructor(
             lockFile.delete()
         }
     }
-
-    private fun whileLocked(runnable: Runnable) {
-        val lockFile = createLockFile()
-        try {
-            RandomAccessFile(lockFile, "rw").use { raf ->
-                raf.channel.use { channel ->
-                    var lock: FileLock? = null
-                    while (lock == null) {
-                        try {
-                            lock = channel.tryLock()
-                        } catch (e: OverlappingFileLockException) {
-                            // Sleep for a while before retrying
-                            Thread.sleep(100)
-                        }
-                    }
-                }
-            }
-        } catch (e: IOException) {
-            throw java.lang.IllegalStateException("Couldn't create lock file $lockFile", e)
-        } finally {
-            lockFile.delete()
-        }
-    }
-
 
     private companion object {
         private const val SPECIAL_CHARACTERS_IN_FILE_NAME_REGEX = """[<>:"\\/|\?\*]"""
