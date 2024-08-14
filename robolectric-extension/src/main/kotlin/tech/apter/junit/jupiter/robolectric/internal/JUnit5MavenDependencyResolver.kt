@@ -14,7 +14,6 @@ import java.nio.channels.FileLock
 import java.nio.channels.OverlappingFileLockException
 import java.util.concurrent.ExecutorService
 
-
 internal class JUnit5MavenDependencyResolver private constructor(
     repositoryUrl: String,
     repositoryId: String,
@@ -82,11 +81,12 @@ internal class JUnit5MavenDependencyResolver private constructor(
                 raf.channel.use { channel ->
                     var lock: FileLock? = null
                     while (lock == null) {
+                        @Suppress("SwallowedException")
                         try {
                             lock = channel.tryLock()
                         } catch (e: OverlappingFileLockException) {
                             // Sleep for a while before retrying
-                            Thread.sleep(100)
+                            Thread.sleep(WAIT_MS_UNTIL_LOCK_FILE_RELEASED)
                         }
                     }
                     runnable.run()
@@ -101,6 +101,7 @@ internal class JUnit5MavenDependencyResolver private constructor(
     }
 
     private companion object {
+        private const val WAIT_MS_UNTIL_LOCK_FILE_RELEASED = 100L
         private const val SPECIAL_CHARACTERS_IN_FILE_NAME_REGEX = """[<>:"\\/|\?\*]"""
     }
 }
