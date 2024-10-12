@@ -40,6 +40,26 @@ internal class JUnit5MavenDependencyResolver private constructor(
         executorService,
     )
 
+    override fun createMavenFetcher(
+        repositoryUrl: String,
+        repositoryUserName: String?,
+        repositoryPassword: String?,
+        proxyHost: String?,
+        proxyPort: Int,
+        localRepositoryDir: File,
+        executorService: ExecutorService
+    ): MavenArtifactFetcher {
+        return JUnit5RobolectricMavenArtifactFetcher(
+            repositoryUrl,
+            repositoryUserName,
+            repositoryPassword,
+            proxyHost,
+            proxyPort,
+            localRepositoryDir,
+            executorService
+        )
+    }
+
     override fun getLocalArtifactUrls(vararg dependencies: DependencyJar): Array<URL?> {
         val artifacts: List<Pair<DependencyJar, MavenJarArtifact>> = dependencies.map { it to MavenJarArtifact(it) }
 

@@ -6,7 +6,9 @@ import org.robolectric.internal.AndroidSandbox
 import org.robolectric.internal.SandboxManager
 import org.robolectric.internal.SandboxManager.SandboxBuilder
 import org.robolectric.internal.SandboxTestRunner
+import org.robolectric.internal.bytecode.ClassInstrumentor
 import org.robolectric.internal.bytecode.InstrumentationConfiguration
+import org.robolectric.internal.bytecode.JUnit5RobolectricClassInstrumentor
 import org.robolectric.internal.bytecode.Sandbox
 import org.robolectric.internal.dependency.DependencyResolver
 import org.robolectric.util.inject.Injector
@@ -119,5 +121,6 @@ internal class JUnit5RobolectricTestRunner(
             defaultInjector().bind(SandboxBuilder::class.java, JUnit5RobolectricSandboxBuilder::class.java)
                 .bind(DependencyResolver::class.java, JUnit5MavenDependencyResolver::class.java)
                 .bind(SandboxManager::class.java, JUnit5RobolectricSandboxManager::class.java)
+                .bind(ClassInstrumentor::class.java, JUnit5RobolectricClassInstrumentor::class.java)
     }
 }
