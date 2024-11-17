@@ -2,9 +2,9 @@ package tech.apter.junit.jupiter.robolectric.internal
 
 import org.robolectric.annotation.GraphicsMode
 import org.robolectric.annotation.LooperMode
+import org.robolectric.annotation.ResourcesMode
 import org.robolectric.annotation.SQLiteMode
 import org.robolectric.internal.AndroidSandbox
-import org.robolectric.internal.ResourcesMode
 import org.robolectric.internal.SandboxManager
 import org.robolectric.internal.bytecode.InstrumentationConfiguration
 import org.robolectric.pluginapi.Sdk
@@ -23,7 +23,7 @@ internal class JUnit5RobolectricSandboxManager @Inject constructor(
     override fun getAndroidSandbox(
         instrumentationConfig: InstrumentationConfiguration,
         sdk: Sdk,
-        resourcesMode: ResourcesMode,
+        resourcesMode: ResourcesMode.Mode,
         looperMode: LooperMode.Mode,
         sqliteMode: SQLiteMode.Mode,
         graphicsMode: GraphicsMode.Mode,
@@ -50,7 +50,7 @@ internal class JUnit5RobolectricSandboxManager @Inject constructor(
         private val testClassName: String,
         private val instrumentationConfiguration: InstrumentationConfiguration,
         private val sdk: Sdk,
-        private val resourcesMode: ResourcesMode,
+        private val resourcesMode: ResourcesMode.Mode,
         private val graphicsMode: GraphicsMode.Mode,
     )
 
