@@ -46,9 +46,9 @@ task downloadAarDepsPlugin {
             final url = from[i]
             final targetFile = to[i]
             try {
-                new URL(url).withInputStream { inputStream -> targetFile.withOutputStream { it << inputStream } }
+                URI.create(url).toURL().withInputStream { inputStream -> targetFile.withOutputStream { it << inputStream } }
             } catch (IOException e) {
-                logger.debug("Error during downloading ${url.name}. Keep the stored version.\n$e")
+                logger.debug("Error during downloading ${url}. Keep the stored version.\n$e")
             }
         }
     }

@@ -1,8 +1,8 @@
 package tech.apter.junit.jupiter.robolectric.internal
 
+import org.robolectric.annotation.ResourcesMode
 import org.robolectric.annotation.SQLiteMode
 import org.robolectric.internal.AndroidSandbox
-import org.robolectric.internal.ResourcesMode
 import org.robolectric.internal.SandboxManager.SandboxBuilder
 import org.robolectric.internal.bytecode.InstrumentationConfiguration
 import org.robolectric.pluginapi.Sdk
@@ -24,7 +24,7 @@ class JUnit5RobolectricSandboxBuilderTest {
         val instrumentationConfiguration = createInstrumentationConfiguration()
         val runtimeSdk: Sdk = TestUtil.sdkCollection.getSdk(33)
         val compileSdk: Sdk = TestUtil.sdkCollection.getSdk(33)
-        val resourcesMode: ResourcesMode = ResourcesMode.BINARY
+        val resourcesMode: ResourcesMode.Mode = ResourcesMode.Mode.BINARY
         val sqLiteMode: SQLiteMode.Mode = SQLiteMode.Mode.NATIVE
 
         subjectUnderTest {
@@ -50,7 +50,7 @@ class JUnit5RobolectricSandboxBuilderTest {
         val instrumentationConfiguration2 = createInstrumentationConfiguration()
         val runtimeSdk2: Sdk = TestUtil.sdkCollection.getSdk(32)
         val compileSdk2: Sdk = TestUtil.sdkCollection.getSdk(32)
-        val resourcesMode: ResourcesMode = ResourcesMode.BINARY
+        val resourcesMode: ResourcesMode.Mode = ResourcesMode.Mode.BINARY
         val sqLiteMode: SQLiteMode.Mode = SQLiteMode.Mode.NATIVE
 
         subjectUnderTest {

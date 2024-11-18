@@ -1,10 +1,9 @@
 package tech.apter.junit.jupiter.robolectric.internal
 
-import org.robolectric.ApkLoader
+import org.robolectric.annotation.ResourcesMode
 import org.robolectric.annotation.SQLiteMode
 import org.robolectric.internal.AndroidSandbox
 import org.robolectric.internal.AndroidSandbox.SdkSandboxClassLoader
-import org.robolectric.internal.ResourcesMode
 import org.robolectric.internal.SandboxManager
 import org.robolectric.internal.bytecode.ClassInstrumentor
 import org.robolectric.internal.bytecode.InstrumentationConfiguration
@@ -17,7 +16,6 @@ import javax.inject.Inject
 
 internal class JUnit5RobolectricSandboxBuilder @Inject constructor(
     private val testClassContainer: TestClassContainer,
-    private val apkLoader: ApkLoader,
     @Suppress("VisibleForTests")
     private val testEnvironmentSpec: AndroidSandbox.TestEnvironmentSpec,
     private val shadowProviders: ShadowProviders,
@@ -29,7 +27,7 @@ internal class JUnit5RobolectricSandboxBuilder @Inject constructor(
         instrumentationConfig: InstrumentationConfiguration,
         runtimeSdk: Sdk,
         compileSdk: Sdk,
-        resourcesMode: ResourcesMode,
+        resourcesMode: ResourcesMode.Mode,
         sqLiteMode: SQLiteMode.Mode,
     ): AndroidSandbox {
         val testClass = testClassContainer.testClass
@@ -39,7 +37,6 @@ internal class JUnit5RobolectricSandboxBuilder @Inject constructor(
             runtimeSdk,
             compileSdk,
             resourcesMode,
-            apkLoader,
             testEnvironmentSpec,
             sdkSandboxClassLoader,
             shadowProviders,

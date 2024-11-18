@@ -1,9 +1,8 @@
 package tech.apter.junit.jupiter.robolectric.internal
 
-import org.robolectric.ApkLoader
+import org.robolectric.annotation.ResourcesMode
 import org.robolectric.annotation.SQLiteMode
 import org.robolectric.internal.AndroidSandbox
-import org.robolectric.internal.ResourcesMode
 import org.robolectric.internal.bytecode.ShadowProviders
 import org.robolectric.pluginapi.Sdk
 import java.util.concurrent.ThreadFactory
@@ -13,8 +12,7 @@ import java.util.concurrent.atomic.AtomicLong
 internal class JUnit5RobolectricAndroidSandbox(
     runtimeSdk: Sdk,
     compileSdk: Sdk,
-    resourcesMode: ResourcesMode,
-    apkLoader: ApkLoader,
+    resourcesMode: ResourcesMode.Mode,
     @Suppress("VisibleForTests")
     testEnvironmentSpec: TestEnvironmentSpec,
     sdkSandboxClassLoader: SdkSandboxClassLoader,
@@ -24,7 +22,6 @@ internal class JUnit5RobolectricAndroidSandbox(
     runtimeSdk,
     compileSdk,
     resourcesMode,
-    apkLoader,
     testEnvironmentSpec,
     sdkSandboxClassLoader,
     shadowProviders,
