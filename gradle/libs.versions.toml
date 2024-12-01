@@ -17,7 +17,7 @@ jvmToolchainMin = "11"
 jvmToolchain = "17"
 kotlin = "2.0.21"
 kover = "0.8.3"
-robolectric = "4.14"
+robolectric = "4.14.1"
 robolectricExtensionGradlePlugin = "0.9.0"
 # Use when bom also added to the dependencies
 sources = "sources"
