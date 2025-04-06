@@ -10,6 +10,8 @@ import java.io.IOException
 import java.io.RandomAccessFile
 import java.net.MalformedURLException
 import java.net.URL
+import java.nio.channels.FileLock
+import java.nio.channels.OverlappingFileLockException
 import java.util.concurrent.ExecutorService
 
 internal class JUnit5MavenDependencyResolver private constructor(
@@ -20,6 +22,7 @@ internal class JUnit5MavenDependencyResolver private constructor(
     proxyHost: String?,
     proxyPort: Int,
 ) : MavenDependencyResolver(repositoryUrl, repositoryId, repositoryUserName, repositoryPassword, proxyHost, proxyPort) {
+    @Suppress("unused")
     constructor() : this(
         MavenRoboSettings.getMavenRepositoryUrl(),
         MavenRoboSettings.getMavenRepositoryId(),
@@ -44,9 +47,12 @@ internal class JUnit5MavenDependencyResolver private constructor(
         val artifacts: List<Pair<DependencyJar, MavenJarArtifact>> = dependencies.map { it to MavenJarArtifact(it) }
 
         for ((dependencyJar, artifact) in artifacts) {
-            if (!File(localRepositoryDir, artifact.jarPath()).exists()) {
+            val artifactJarFile = File(localRepositoryDir, artifact.jarPath())
+            if (!artifactJarFile.exists()) {
                 whileLocked(dependencyJar) {
-                    mavenArtifactFetcher.fetchArtifact(artifact)
+                    if (!artifactJarFile.exists()) {
+                        mavenArtifactFetcher.fetchArtifact(artifact)
+                    }
                 }
             }
         }
@@ -73,9 +79,18 @@ internal class JUnit5MavenDependencyResolver private constructor(
         try {
             RandomAccessFile(lockFile, "rw").use { raf ->
                 raf.channel.use { channel ->
-                    channel.lock().use {
-                        runnable.run()
+                    var lock: FileLock? = null
+                    while (lock == null) {
+                        @Suppress("SwallowedException")
+                        try {
+                            lock = channel.tryLock()
+                        } catch (e: OverlappingFileLockException) {
+                            // Sleep for a while before retrying
+                            Thread.sleep(WAIT_MS_UNTIL_LOCK_FILE_RELEASED)
+                        }
                     }
+                    runnable.run()
+                    lock.release()
                 }
             }
         } catch (e: IOException) {
@@ -86,6 +101,7 @@ internal class JUnit5MavenDependencyResolver private constructor(
     }
 
     private companion object {
+        private const val WAIT_MS_UNTIL_LOCK_FILE_RELEASED = 100L
         private const val SPECIAL_CHARACTERS_IN_FILE_NAME_REGEX = """[<>:"\\/|\?\*]"""
     }
 }
