@@ -123,7 +123,7 @@ jobs:
           name: ${{ matrix.os }}-unit-test-report
       - name: Comment unit test report
         if: ${{ hashFiles('**/test-results/**/*.xml') != '' }}
-        uses: mikepenz/action-junit-report@cf701569b05ccdd861a76b8607a66d76f6fd4857 # v5.5.1
+        uses: mikepenz/action-junit-report@65fe03598d8d251738592a497a9e8547a5c48eaa # v5.6.0
         with:
           report_paths: '**/test-results/**/*.xml'
           check_name: Unit test report (${{ matrix.os }})
