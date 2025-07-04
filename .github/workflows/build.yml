@@ -38,7 +38,7 @@ jobs:
           java-version-file: '.java-version'
           distribution: 'temurin'
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@8379f6a1328ee0e06e2bb424dadb7b159856a326 # v4.4.0
+        uses: gradle/actions/setup-gradle@ac638b010cf58a27ee6c972d7336334ccaf61c96 # v4.4.1
       - name: Bump version
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.releaseVersion != ''
         run: |
@@ -123,7 +123,7 @@ jobs:
           name: ${{ matrix.os }}-unit-test-report
       - name: Comment unit test report
         if: ${{ hashFiles('**/test-results/**/*.xml') != '' }}
-        uses: mikepenz/action-junit-report@65fe03598d8d251738592a497a9e8547a5c48eaa # v5.6.0
+        uses: mikepenz/action-junit-report@3585e9575db828022551b4231f165eb59a0e74e3 # v5.6.2
         with:
           report_paths: '**/test-results/**/*.xml'
           check_name: Unit test report (${{ matrix.os }})
