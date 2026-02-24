@@ -38,7 +38,7 @@ jobs:
           java-version-file: '.java-version'
           distribution: 'temurin'
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@8379f6a1328ee0e06e2bb424dadb7b159856a326 # v4.4.0
+        uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5.0.2
       - name: Bump version
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.releaseVersion != ''
         run: |
