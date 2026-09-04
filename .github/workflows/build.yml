@@ -146,7 +146,7 @@ jobs:
         with:
           name: ${{ matrix.os }}-kover-report
       - name: Comment branch coverage report to PR
-        uses: mi-kas/kover-report@5f58465b6f395c8fa3adc2665e27250bad87de50 # v1.9
+        uses: mi-kas/kover-report@94d69bc9d417de89b808cd5fe846bca2840911bb # v2.7
         if: ${{ hashFiles('report.xml') != '' }}
         with:
           path: ${{ github.workspace }}/report.xml
@@ -156,7 +156,7 @@ jobs:
           min-coverage-changed-files: 70
           coverage-counter-type: BRANCH
       - name: Comment line coverage report to PR (${{ matrix.os }})
-        uses: mi-kas/kover-report@5f58465b6f395c8fa3adc2665e27250bad87de50 # v1.9
+        uses: mi-kas/kover-report@94d69bc9d417de89b808cd5fe846bca2840911bb # v2.7
         if: ${{ hashFiles('report.xml') != '' }}
         with:
           path: ${{ github.workspace }}/report.xml
