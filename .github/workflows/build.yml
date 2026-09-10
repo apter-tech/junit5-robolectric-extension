@@ -31,14 +31,14 @@ jobs:
           GRADLE_USER_HOME=${RUNNER_TEMP}\.gradle
           mkdir -p "${GRADLE_USER_HOME}"
           echo "GRADLE_USER_HOME=${GRADLE_USER_HOME}" >> ${GITHUB_ENV}
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - name: Set up JDK
-        uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
+        uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4.9.1
         with:
           java-version-file: '.java-version'
           distribution: 'temurin'
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@8379f6a1328ee0e06e2bb424dadb7b159856a326 # v4.4.0
+        uses: gradle/actions/setup-gradle@748248ddd2a24f49513d8f472f81c3a07d4d50e1 # v4.4.4
       - name: Bump version
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.releaseVersion != ''
         run: |
@@ -91,7 +91,7 @@ jobs:
       - build
     if: github.ref_name == github.event.repository.default_branch && github.event_name == 'workflow_dispatch' && github.event.inputs.releaseVersion != '' && !endsWith(github.event.inputs.releaseVersion, 'SNAPSHOT')
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           ref: ${{ github.head_ref }}
       - name: Create release
@@ -123,7 +123,7 @@ jobs:
           name: ${{ matrix.os }}-unit-test-report
       - name: Comment unit test report
         if: ${{ hashFiles('**/test-results/**/*.xml') != '' }}
-        uses: mikepenz/action-junit-report@65fe03598d8d251738592a497a9e8547a5c48eaa # v5.6.0
+        uses: mikepenz/action-junit-report@3585e9575db828022551b4231f165eb59a0e74e3 # v5.6.2
         with:
           report_paths: '**/test-results/**/*.xml'
           check_name: Unit test report (${{ matrix.os }})
